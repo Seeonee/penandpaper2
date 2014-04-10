@@ -1,0 +1,12 @@
+<template name="home">
+  <h1>Home</h1>
+  {{#if has_characters}}
+    {{#each characters}}
+      <h3>{{name}}</h3>
+      <p>{{skills_list}}</p>
+    {{/each}}
+  {{else}}
+    <p>{{no_characters}}</p>
+  {{/if}}
+</template>
+

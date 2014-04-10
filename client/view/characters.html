@@ -1,0 +1,13 @@
+<template name="characters">
+  <h1>Characters</h1>
+  {{#if characters_exist}}
+    {{#each characters}}
+      <h3>{{name}}</h3>
+      <h4>Created by {{owner}}</h4>
+      <p>{{skills_list}}</p>
+    {{/each}}
+  {{else}}
+    <p>{{no_characters}}</p>
+  {{/if}}
+</template>
+

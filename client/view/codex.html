@@ -1,0 +1,34 @@
+<template name="codex">
+  <h1>Codex</h1>
+  {{> codex_filters}}
+  {{#each codex}}
+    {{> codex_entry}}
+  {{/each}}
+</template>
+
+<template name="codex_filters">
+  <div class="search_inputs">
+    {{#each get_text_filters}}
+      {{name_pretty}}: <input type="text" class="text" name="query_{{name}}" value="{{value}}" />
+    {{/each}}
+    {{#with get_slot_filter}}
+      {{name_pretty}}: <select type="text" name="query_{{name}}">
+      {{#each get_slot_values}}
+        <option value="{{name}}" {{selected}}>{{name_pretty}}</option>
+      {{/each}}
+      </select>
+    {{/with}}
+    <input class="submit_button" type="submit" value="Filter" />
+  </div>
+</template>
+
+<template name="codex_entry">
+  <div>
+    <h3>{{name_uppercase}}</h3>
+    <p>Level: {{level}}</p>
+    <p>Slot: {{slots_list}}</p>
+    <p>Type: {{types_list}}</p>
+    <p>Text: {{text}}</p>
+  </div>
+</template>
+
