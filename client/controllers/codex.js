@@ -4,50 +4,20 @@
 Meteor.subscribe("codex");
 
 // Initial filters.
-Session.set('selected_filters', {
-  name: '',
-  text: '',
-  types: '',
-  level: '',
-  slots: '',
-});
+Session.set('selected_filters', null);
 
 // Get the list of all codex entries.
 Template.codex.codex = function() {
   // Add in the filters.
-  var filters = Session.get('selected_filters');
   var find_terms = {};
+  var filters = Session.get('selected_filters');
   if (filters) {
-    // These values expect string arrays; 
-    // we have to match all elements.
-    $.each(['slots', 'types'], function(k, v) {
-      if (filters[v]) {
-        find_terms[v] = {$all: filters[v]};
+    $.each(filters, function(filter_name, filter_value) {
+      var filter = FilterUtils.get_filter_by_name(filter_name);
+      if (filter) {
+        find_terms[filter_name] = filter.dataToSearchTermConverter(filter_value);
       }
     });
-    // This should be an int.
-    if (filters['level']) {
-      find_terms['level'] = parseInt(filters['level'][0]);
-    }
-    // This should match a string regex.
-    if (filters['name']) {
-      find_terms['name'] = {
-        $regex: RegExp.quote(filters['name']),
-        $options: 'i'
-      };
-    }
-    // This should match any text.
-    // TODO: ! But for now, use a string regex.
-    if (filters['text']) {
-      // %20 has been converted to spaces,
-      // but + has been converted to _,
-      // which we also want to change into spaces.
-      var text = filters['text'][0].replace(/_/g, ' ');
-      find_terms['text'] = {
-        $regex: RegExp.quote(text),
-        $options: 'i'
-      };
-    }
   }
   return Codex.find(find_terms, {sort: {name: -1}});
 }
@@ -87,96 +57,39 @@ Template.codice.selected_codice = function() {
   return Codex.findOne({name: Session.get('selected_codice')});
 }
 
-// Loop over the filters.
-Template.codex_filters.get_text_filters = function() {
-  var filters = _.map(Session.get('selected_filters'), function(value, key) {
-    return {
-      name: key, 
-      name_pretty: key[0].toUpperCase() + key.slice(1),
-      value: value
-    };
-  });
-  // Don't add the slot filter yet.
-  filters = _.filter(filters, function(f) { return f.name != 'slots' });
-  return filters;
-}
-
-// Get the slot filter.  
-Template.codex_filters.get_slot_filter = function() {
-  var filter = Session.get('selected_filters');
-  if (filter && filter['slots']) {
-    filter = filter['slots'][0];
-  } else {
-    filter = '';
-  }
-  return {
-    name: 'slots',
-    name_pretty: 'Slots',
-    value: filter
-  };
-}
-
-// Get the possible values.
-Template.codex_filters.get_slot_values = function() {
-  var values = [
-    'ability',
-    'ability upgrade',
-    'armor',
-    'armor upgrade',
-    'calling',
-    'curse',
-    'gift',
-    'heritage',
-    'one handed shield',
-    'one handed shield upgrade',
-    'one handed weapon',
-    'one handed weapon upgrade',
-    'two handed ranged weapon',
-    'two handed ranged weapon upgrade'
-  ];
-  var filter = Session.get('selected_filters');
-  if (filter && filter['slots']) {
-    filter = filter['slots'][0].replace(/_/g, ' ');
-  }
-  var map = _.map(values, function(value, key) {
-    return {
-      name: value,
-      name_pretty: value[0].toUpperCase() + value.slice(1),
-      selected: (value == filter) ? 'selected' : ''
+// Return the list of filters available.
+Template.codex_filters.get_filters = function() {
+  var all_filters = FilterUtils.get_all_filters();
+  var selected_filters = Session.get('selected_filters');
+  return $.map(all_filters, function(filter) {
+    var value = '';
+    if (selected_filters && selected_filters[filter.name]) {
+      value = selected_filters[filter.name];
     }
+    FilterUtils.update_filter_value(filter, value);
+    return filter;
   });
-  map.unshift({name: '', name_pretty: '', selected: ''});
-  return map;
-}
-
-// Create nicely formatted URL additions.
-var formatForURL = function(filter, text) {
-  var s = text.trim().toLowerCase();
-  if (filter == 'types') {
-    var s = s.replace(/ +/g, '+');
-    s = s.replace(/[,\+]{2,}/g, '&');
-    return filter + ':' + s;
-  }
-  return filter + ':' + s.replace(/ /g, '+');
 }
 
 // Collate search terms and start looking.
 var performSearch = function() {
   var url = '';
-  $.each(['name', 'types', 'level', 'text', 'slots'], function(k, v) {
-    var text = $('.search_inputs [name="query_' + v + '"]').val();
-    if (text && text != '') {
-      url += '/' + formatForURL(v, text);
+  $.each(FilterUtils.get_all_filter_names(), function(k, filter_name) {
+    var elem = $('.search_inputs [name="query_' + filter_name + '"]');
+    if (elem) {
+      text = elem.val();
+      if (text && text != '') {
+        url += FilterUtils.format_value_for_url(filter_name, text);
+      }
     }
   });
-  if (url != '') {
-    // TODO: If a character is selected and
-    // skills are being search as part of equipping
-    // one of that character's slots, the base path
-    // should be something more like:
-    // "/characters/<name>/<slot_name>/<#>/<url...>"
-    Router.go('/codex' + url);
-  }
+  
+  // TODO: If a character is selected and
+  // skills are being search as part of equipping
+  // one of that character's slots, the base path
+  // should be something more like:
+  // "/characters/<name>/<slot_name>/<#>/<url...>"
+  Router.go('/codex' + url);
 }
 
 // Handle search inputs.

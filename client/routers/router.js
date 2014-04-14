@@ -59,6 +59,7 @@ Router.map(function() {
     waitOn: codexReady,
     action: function() {
       if (this.ready()) {
+        Session.set('selected_filters', null);
         this.render();
       } else {
         this.render('loading');
@@ -94,7 +95,7 @@ Router.map(function() {
     waitOn: codexReady,
     onRun: function() {
       if (this.params.filters) {
-        var f = PenAndPaperUtils.decode_url_filter_terms(this.params.filters);
+        var f = FilterUtils.decode_url_filter_terms(this.params.filters);
         Session.set('selected_filters', f);
       }
     },
