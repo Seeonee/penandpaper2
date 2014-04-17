@@ -95,7 +95,7 @@ Router.map(function() {
     waitOn: codexReady,
     onRun: function() {
       if (this.params.filters) {
-        var f = FilterUtils.decode_url_filter_terms(this.params.filters);
+        var f = CodexFilters.decode_url_filter_terms(this.params.filters);
         Session.set('selected_filters', f);
       }
     },

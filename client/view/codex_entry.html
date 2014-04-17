@@ -1,0 +1,26 @@
+<template name="codex_entry">
+  <div class="document">
+    <div class="icon activated background {{first_slot}}">
+      <div class="name">{{name_uppercase}}</div>
+    </div>
+    <div class="info">
+      <div class="level">
+        <span class="tag">LEVEL:</span>
+        <span class="value">{{level}}</span>
+      </div>
+      <div class="slot">
+        <span class="tag">SLOT:</span>
+        <span class="value">{{slots_list}}</span>
+      </div>
+      <div class="type">
+        <span class="tag">TYPE:</span>
+        <span class="value">{{types_list}}</span>
+      </div>
+      <div class="text">
+        <span class="tag">TEXT:</span>
+        <div class="value">{{text_with_breaks}}</div>
+      </div>
+    </div>
+  </div>
+</template>
+

@@ -4,27 +4,30 @@
 
 FilterUtils = {}
 
-var all_filters = {};
+// Object definition.
+FilterSet = {
+  all_filters: {}
+}
 
 // Return a list of all filter objects.
-FilterUtils.get_all_filters = function() {
-  return all_filters;
+FilterSet.get_all_filters = function() {
+  return this.all_filters;
 }
 
 // Return a list of all filter names.
-FilterUtils.get_all_filter_names = function() {
-  return _.map(all_filters, function(value, key) {
+FilterSet.get_all_filter_names = function() {
+  return _.map(this.all_filters, function(value, key) {
     return key;
   });
 }
 
 // Return a filter object by name.
-FilterUtils.get_filter_by_name = function(name) {
-  return all_filters[name];
+FilterSet.get_filter_by_name = function(name) {
+  return this.all_filters[name];
 }
 
 // This one updates a filter's value.
-FilterUtils.update_filter_value = function(filter, value) {
+FilterSet.update_filter_value = function(filter, value) {
   if (filter.is_text_filter) {
     filter.value = value;
   } else {
@@ -39,10 +42,10 @@ FilterUtils.update_filter_value = function(filter, value) {
 }
 
 // Add a text filter.
-FilterUtils.add_text_filter = function(name, 
+FilterSet.add_text_filter = function(name, 
                                        dataToSearchTermConverter, 
                                        dataToURLConverter) {
-  dataToURLConverter = dataToURLConverter || default_data_to_url_converter;
+  dataToURLConverter = dataToURLConverter || FilterUtils.default_data_to_url_converter;
   var value = null;
   // This should update the filter's value reactively.
   var filters = Session.get('session_filters');
@@ -58,19 +61,16 @@ FilterUtils.add_text_filter = function(name,
     dataToSearchTermConverter: dataToSearchTermConverter,
     dataToURLConverter: dataToURLConverter,
   };
-  all_filters[name] = filter;
+  this.all_filters[name] = filter;
   return filter;
 }
 
-var filter_value_getter = function() {
-}
-
 // Add a multiple choice filter.
-FilterUtils.add_multiple_choice_filter = function(name, 
+FilterSet.add_multiple_choice_filter = function(name, 
                                                   choices, 
                                                   dataToSearchTermConverter, 
                                                   dataToURLConverter) {
-  dataToURLConverter = dataToURLConverter || default_data_to_url_converter;
+  dataToURLConverter = dataToURLConverter || FilterUtils.default_data_to_url_converter;
   var value = null;
   // This should update the filter's value reactively.
   var filters = Session.get('session_filters');
@@ -96,7 +96,7 @@ FilterUtils.add_multiple_choice_filter = function(name,
     dataToSearchTermConverter: dataToSearchTermConverter,
     dataToURLConverter: dataToURLConverter,
   };
-  all_filters[name] = filter;
+  this.all_filters[name] = filter;
   return filter;
 }
 
@@ -108,9 +108,9 @@ FilterUtils.add_multiple_choice_filter = function(name,
 // Any field which isn't found is ignored.
 // Any field which is filtered more than once will use the last filter.
 // Any filter which can be specified but isn't is left out of the map.
-FilterUtils.decode_url_filter_terms = function(url) {
+FilterSet.decode_url_filter_terms = function(url) {
   var params = {};
-  var filter_names = FilterUtils.get_all_filter_names();
+  var filter_names = this.get_all_filter_names();
   
   pieces = url.split('/');
   $.each(pieces, function(i, v) {
@@ -125,10 +125,10 @@ FilterUtils.decode_url_filter_terms = function(url) {
 }
 
 // Create nicely formatted URL additions.
-FilterUtils.format_value_for_url = function(filter_name, text) {
-  if (filter_name in all_filters) {
+FilterSet.format_value_for_url = function(filter_name, text) {
+  if (filter_name in this.all_filters) {
     var s = text.trim().toLowerCase();
-    return '/' + filter_name + ':' + all_filters[filter_name].dataToURLConverter(text);
+    return '/' + filter_name + ':' + this.all_filters[filter_name].dataToURLConverter(text);
   } else {
     // If it's not something we can filter on,
     // don't try to stuff it into the URL bar.
@@ -136,17 +136,22 @@ FilterUtils.format_value_for_url = function(filter_name, text) {
   }
 }
 
+// And finally, a factory method for constructing!
+FilterUtils.make = function() {
+  return Object.create(FilterSet);
+}
+
 // These next few functions are used to take the text value
 // from an input element and turn it into a portion of a URL.
 
 // Default function for converting data into a URL.
-var default_data_to_url_converter = function(text) {
+FilterUtils.default_data_to_url_converter = function(text) {
   return text.trim().toLowerCase();
 }
 
 // More complicated function for converting data into a URL;
 // this one splits up by commas and returns an ampersanded list.
-var as_list_data_to_url_converter = function(text) {
+FilterUtils.as_list_data_to_url_converter = function(text) {
   var s = text.trim().toLowerCase();
   s = s.replace(/ +/g, '+');
   s = s.replace(/[,\+]{1,}/g, '&');
@@ -158,7 +163,7 @@ var as_list_data_to_url_converter = function(text) {
 // something that Mongo can filter a find() on.
 
 // Used for filters which want to do a regex text search.
-var regex_match = function(values) {
+FilterUtils.regex_match = function(values) {
   return {
     $regex: RegExp.quote(values[0]),
     $options: 'i'
@@ -166,44 +171,13 @@ var regex_match = function(values) {
 }
 
 // Used for filters which want to match all items in an array.
-var all_in_list_match = function(values) {
+FilterUtils.all_in_list_match = function(values) {
   // TODO: Change to take the string value, and do the to-array splitting here?
   return {$all: values};
 }
 
 // Used for filters which want to match a value as an int.
-var int_match = function(values) {
+FilterUtils.int_match = function(values) {
   return parseInt(values[0]);
 }
-
-// Initialize a bunch of filter stuff.
-FilterUtils.initialize = function() {
-  FilterUtils.filters = [];
-  FilterUtils.add_text_filter('name', regex_match);
-  FilterUtils.add_text_filter('types', all_in_list_match, as_list_data_to_url_converter);
-  FilterUtils.add_text_filter('text', regex_match);
-  FilterUtils.add_text_filter('level', int_match);
-  
-  // This one's special.
-  var choices = [
-    '',
-    'ability',
-    'ability upgrade',
-    'armor',
-    'armor upgrade',
-    'calling',
-    'curse',
-    'gift',
-    'heritage',
-    'one handed shield',
-    'one handed shield upgrade',
-    'one handed weapon',
-    'one handed weapon upgrade',
-    'two handed ranged weapon',
-    'two handed ranged weapon upgrade'
-  ];
-  FilterUtils.add_multiple_choice_filter('slots', choices, all_in_list_match);
-}
-
-FilterUtils.initialize();
 

@@ -1,40 +1,32 @@
-/**
- * Codex model.
- */
-Meteor.subscribe("codex");
-
-// Initial filters.
-Session.set('selected_filters', null);
 
 // Get the list of all codex entries.
 Template.codex.codex = function() {
-  // Add in the filters.
-  var find_terms = {};
-  var filters = Session.get('selected_filters');
-  if (filters) {
-    $.each(filters, function(filter_name, filter_value) {
-      var filter = FilterUtils.get_filter_by_name(filter_name);
-      if (filter) {
-        find_terms[filter_name] = filter.dataToSearchTermConverter(filter_value);
-      }
-    });
-  }
-  return Codex.find(find_terms, {sort: {name: -1}});
+  return Codex.find(getSelectedCodexFilterTerms(), {sort: {name: -1}});
 }
 
-// Format a codice's name.
+// Format a codice's name for display.
 Template.codex_entry.name_uppercase = function() {
   return this.name.toUpperCase();
 }
 
-// Format a codice's slot(s).
+// Format a codice's slot, for icon purposes.
+Template.codex_entry.first_slot = function() {
+  return this.slots[0].replace(/_/g, ' ');
+}
+
+// Format a codice's slot(s) for display.
 Template.codex_entry.slots_list = function() {
   return PenAndPaperUtils.multi_deunderscore(this.slots);
 }
 
-// Format a codice's type(s).
+// Format a codice's type(s) for display.
 Template.codex_entry.types_list = function() {
   return PenAndPaperUtils.multi_deunderscore(this.types);
+}
+
+// Format a codice's text for display.
+Template.codex_entry.text_with_breaks = function() {
+  return this.text.replace(/\\n|\n/g, '<br />');
 }
 
 // See if we can find a single codice.
@@ -57,48 +49,32 @@ Template.codice.selected_codice = function() {
   return Codex.findOne({name: Session.get('selected_codice')});
 }
 
-// Return the list of filters available.
-Template.codex_filters.get_filters = function() {
-  var all_filters = FilterUtils.get_all_filters();
-  var selected_filters = Session.get('selected_filters');
-  return $.map(all_filters, function(filter) {
-    var value = '';
-    if (selected_filters && selected_filters[filter.name]) {
-      value = selected_filters[filter.name];
-    }
-    FilterUtils.update_filter_value(filter, value);
-    return filter;
-  });
-}
+// Open a dialog to create a new codex entry.
+Template.codex.events({
+  'click .dialog_open_button': function() {
+    var codice = {
+      name: 'NAME',
+      level: '1',
+      slots: 'Slot',
+      types: 'Types',
+      text: 'Description...'
+    };
+    Session.set('new_codice', codice);
+  }
+});
 
-// Collate search terms and start looking.
-var performSearch = function() {
-  var url = '';
-  $.each(FilterUtils.get_all_filter_names(), function(k, filter_name) {
-    var elem = $('.search_inputs [name="query_' + filter_name + '"]');
-    if (elem) {
-      text = elem.val();
-      if (text && text != '') {
-        url += FilterUtils.format_value_for_url(filter_name, text);
-      }
-    }
-  });
-  
-  // TODO: If a character is selected and
-  // skills are being search as part of equipping
-  // one of that character's slots, the base path
-  // should be something more like:
-  // "/characters/<name>/<slot_name>/<#>/<url...>"
-  Router.go('/codex' + url);
-}
-
-// Handle search inputs.
-Template.codex_filters.events = {
-  'keydown .text': function(evt) {
-    if (evt.which == 13) {
-      performSearch();
-    }
-  },
-  'click .submit_button': performSearch
-}
+// Open a dialog to create a new codex entry,
+// using an existing entry as a template.
+Template.codex_entry.events({
+  'click .name': function() {
+    var codice = {
+      name: PenAndPaperUtils.deunderscore(this.name),
+      level: this.level,
+      slots: PenAndPaperUtils.multi_deunderscore(this.slots),
+      types: PenAndPaperUtils.multi_deunderscore(this.types),
+      text: this.text
+    };
+    Session.set('new_codice', codice)
+  }
+});
 

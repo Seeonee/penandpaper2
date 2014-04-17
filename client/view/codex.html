@@ -4,32 +4,7 @@
   {{#each codex}}
     {{> codex_entry}}
   {{/each}}
-</template>
-
-<template name="codex_filters">
-  <div class="search_inputs">
-    {{#each get_filters}}
-      {{#if is_text_filter}}
-        {{name_pretty}}: <input type="text" class="text" name="query_{{name}}" value="{{value}}" />
-      {{else}}
-        {{name_pretty}}: <select type="text" name="query_{{name}}">
-        {{#each options}}
-          <option value="{{name}}" {{selected}}>{{name_pretty}}</option>
-        {{/each}}
-        </select>
-      {{/if}}
-    {{/each}}
-    <input class="submit_button" type="submit" value="Filter" />
-  </div>
-</template>
-
-<template name="codex_entry">
-  <div>
-    <h3>{{name_uppercase}}</h3>
-    <p>Level: {{level}}</p>
-    <p>Slot: {{slots_list}}</p>
-    <p>Type: {{types_list}}</p>
-    <p>Text: {{text}}</p>
-  </div>
+  {{> new_codex_dialog}}
+  <div class="dialog_open_button">New Entry</div>
 </template>
 
