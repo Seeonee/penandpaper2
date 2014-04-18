@@ -1,0 +1,2 @@
+Add a mechanism to add bonuses. These probably don't need to be displayed, since they're encapsulated in the text anyways.
+Add a distinction between player and monster codices.

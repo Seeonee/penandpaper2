@@ -1,9 +1,13 @@
 <template name="navbar">
-  <div class="nav-bar">
-    <a href="{{pathFor 'home'}}">Home</a>
-    <a href="{{pathFor 'characters'}}">Characters</a>
-    <a href="{{pathFor 'codex'}}">Codex</a>
-    <a href="{{pathFor 'glossary'}}">Glossary</a>
-  </div>
+  <header>
+    <div class="column">
+      <div class="nav-bar">
+        {{#each navlinks}}
+          <a href="{{pathFor path}}" class="{{visiting}}">{{name}}</a>
+        {{/each}}
+      </div>
+      {{> loginButtons align="right"}}
+    </div>
+  </header>
 </template>
 

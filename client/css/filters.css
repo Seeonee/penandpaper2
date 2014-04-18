@@ -1,0 +1,11 @@
+/* Search terms. Some columns can be narrower. */
+.filter_inputs input[name="query_name"],
+.filter_inputs input[name="query_types"] {
+  width: 100px;
+}
+.filter_inputs select[name="query_slots"] {
+  width: 200px;
+}
+.filter_inputs input[name="query_level"] {
+  width: 20px;
+}

@@ -1,26 +1,33 @@
 <template name="codex_entry">
   <div class="document">
     <div class="icon activated background {{first_slot}}">
-      <div class="name">{{name_uppercase}}</div>
+      <div class="name" contenteditable="{{can_edit}}">
+        {{name_uppercase}}
+      </div>
     </div>
     <div class="info">
       <div class="level">
-        <span class="tag">LEVEL:</span>
-        <span class="value">{{level}}</span>
+        <div class="tag">LEVEL:</div>
+        <div class="value" contenteditable="{{can_edit}}">{{level}}</div>
       </div>
       <div class="slot">
-        <span class="tag">SLOT:</span>
-        <span class="value">{{slots_list}}</span>
+        <div class="tag">SLOT:</div>
+        <div class="value" contenteditable="{{can_edit}}">{{slots_list}}</div>
       </div>
       <div class="type">
-        <span class="tag">TYPE:</span>
-        <span class="value">{{types_list}}</span>
+        <div class="tag">TYPE:</div>
+        <div class="value" contenteditable="{{can_edit}}">{{types_list}}</div>
       </div>
       <div class="text">
-        <span class="tag">TEXT:</span>
-        <div class="value">{{text_with_breaks}}</div>
+        <div class="tag">TEXT:</div>
+        <div class="value" contenteditable="{{can_edit}}">{{{text_with_breaks}}}</div>
       </div>
     </div>
+    {{#if can_edit}}
+      <div class="button save"></div>
+      <div class="button delete"></div>
+      <div class="button copy"></div>
+    {{/if}}
   </div>
 </template>
 

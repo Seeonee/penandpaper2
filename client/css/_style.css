@@ -1,0 +1,15 @@
+/* General styling. */
+html {
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  margin-top: 61px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: bold;
+}
+.column {
+  width: 900px;
+  margin: auto;
+}

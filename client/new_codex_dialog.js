@@ -9,6 +9,18 @@ Template.new_codex_dialog.codice_being_created = function() {
   return Session.get('new_codice');
 }
 
+// This is fired whenever our "add" attempt finishes
+// or fails.
+var newCodiceCallback = function(err, result) {
+  if (err) {
+    console.log('error: ' + err);
+    Session.set('new_codice', _.extend(Session.get('new_codice'), {error: err.toString()}));
+  } else {
+    console.log('success; new entry id: ' + result);
+    Session.set('new_codice', null);
+  }
+}
+
 // Register click events.
 Template.new_codex_dialog.events({
   // Close the dialog.
@@ -17,31 +29,16 @@ Template.new_codex_dialog.events({
   },
   // Assemble and (attempt to) submit the new entry.
   // If it works, the dialog will close.
-  // If not, an error message will be displayed (TODO!!!).
+  // If not, an error message will be displayed.
   'click .dialog_submit_button': function (event, template) {
-    var name = template.find("input[name*=new_codex_name]").value;
-    var level = template.find("input[name*=new_codex_level]").value;
-    var slots = template.find("input[name*=new_codex_slots]").value;
-    var types = template.find("input[name*=new_codex_types]").value;
-    var text = template.find("textarea[name*=new_codex_text]").value;
-
-    var callback = function(err, result) {
-      if (err) {
-        console.log('error: ' + err);
-        Session.set('new_codice', _.extend(Session.get('new_codice'), {error: err.toString()}));
-      } else {
-        console.log('success; new entry id: ' + result);
-        Session.set('new_codice', null);
-      }
-    }
     options = {
-      name: name,
-      level: level,
-      slots: slots,
-      types: types,
-      text: text
+      name: template.find("input[name*=new_codex_name]").value,
+      level: template.find("input[name*=new_codex_level]").value,
+      slots: template.find("input[name*=new_codex_slots]").value,
+      types: template.find("input[name*=new_codex_types]").value,
+      text: template.find("textarea[name*=new_codex_text]").value
     };
-    createCodice(options, callback);
+    createCodice(options, newCodiceCallback);
   }
 });
 

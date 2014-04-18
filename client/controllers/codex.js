@@ -1,8 +1,22 @@
 
 // Get the list of all codex entries.
 Template.codex.codex = function() {
-  return Codex.find(getSelectedCodexFilterTerms(), {sort: {name: -1}});
+  return Codex.find(getSelectedCodexFilterTerms(), {sort: {name: 1}});
 }
+
+// Open a dialog to create a new codex entry.
+Template.codex.events({
+  'click .add_more': function() {
+    var codice = {
+      name: 'NAME',
+      level: '1',
+      slots: 'Slot',
+      types: 'Types',
+      text: 'Description...'
+    };
+    Session.set('new_codice', codice);
+  }
+});
 
 // Format a codice's name for display.
 Template.codex_entry.name_uppercase = function() {
@@ -11,7 +25,7 @@ Template.codex_entry.name_uppercase = function() {
 
 // Format a codice's slot, for icon purposes.
 Template.codex_entry.first_slot = function() {
-  return this.slots[0].replace(/_/g, ' ');
+  return this.slots[0].replace('_upgrade', ' upgrade');
 }
 
 // Format a codice's slot(s) for display.
@@ -26,47 +40,46 @@ Template.codex_entry.types_list = function() {
 
 // Format a codice's text for display.
 Template.codex_entry.text_with_breaks = function() {
-  return this.text.replace(/\\n|\n/g, '<br />');
+  return _.escape(this.text).replace(/\\n|\n/g, '<br />');
 }
 
-// See if we can find a single codice.
-Template.codice.codice_exists = function(name) {
-  return Codex.findOne({name: name});
+// Lite test for admin privileges.
+Template.codex_entry.can_edit = function() {
+  return PenAndPaperUtils.isUserAdmin();
 }
 
-// Return the codice as an iterable (single) item.
-Template.codice.entry_for = function(name) {
-  return Codex.findOne({name: name});
-}
-
-// Figure out if a character is selected.
-Template.codice.is_codice_selected = function() {
-  return Session.get('selected_codice');
-}
-
-// Get the selected character.
-Template.codice.selected_codice = function() {
-  return Codex.findOne({name: Session.get('selected_codice')});
-}
-
-// Open a dialog to create a new codex entry.
-Template.codex.events({
-  'click .dialog_open_button': function() {
-    var codice = {
-      name: 'NAME',
-      level: '1',
-      slots: 'Slot',
-      types: 'Types',
-      text: 'Description...'
-    };
-    Session.set('new_codice', codice);
+// This is fired whenever our "delete" attempt finishes
+// or fails.
+var logErrorCallback = function(err, result) {
+  if (err) {
+    console.log('error: ' + err);
   }
-});
+}
+
+// Figure out if this editable element can accept newlines.
+// I.e., is it the text area?
+var isNewlineAllowedInElement = function(element) {
+  try {
+    return element.parent().hasClass('text');
+  } catch (err) {
+    // Oh well, no newlines for you.
+    return false;
+  }
+}
 
 // Open a dialog to create a new codex entry,
 // using an existing entry as a template.
 Template.codex_entry.events({
-  'click .name': function() {
+  'keypress [contenteditable="true"]': function(evt) {
+    if (evt.which == 13) {
+      var element = $(event.target);
+      if (!isNewlineAllowedInElement(element)) {
+        evt.preventDefault();
+      }
+    }
+  },
+  // Create a new entry based on this one.
+  'click .button.copy': function() {
     var codice = {
       name: PenAndPaperUtils.deunderscore(this.name),
       level: this.level,
@@ -75,6 +88,35 @@ Template.codex_entry.events({
       text: this.text
     };
     Session.set('new_codice', codice)
+  },
+  // Attempt to delete an entry.
+  'click .button.delete': function() {
+    if (confirm('Are you sure you want to delete "' + this.name + '"?')) {
+      deleteCodice({_id: this._id}, logErrorCallback);
+    }
+  },
+  // Save modifications to an entry.
+  'click .button.save': function(evt, template) {
+    options = {
+      _id: this._id,
+      name: $(template.find(".icon .name")).text(),
+      level: $(template.find(".info .level .value")).text(),
+      slots: $(template.find(".info .slot .value")).text(),
+      types: $(template.find(".info .type .value")).text(),
+      text: $(template.find(".info .text .value")).html() // Because we allow newlines.
+    };
+    // Fix up the newlines in text... *sigh*
+    options.text = options.text.replace(/<br.*?>/gi, '\n');
+    // If we don't do this next bit, the value in the <div>
+    // doesn't match what comes back from the database, and
+    // for some reason we end up with the last line or two 
+    // getting duplicated (each time we save, so potentially
+    // a lot).
+    $(template.find(".info .text .value")).html(options.text.replace(/\n/g, '<br>'));
+    
+    // Okay, now we can do real work.
+    updateCodice(options, logErrorCallback);
   }
 });
+
 

@@ -72,7 +72,7 @@ Template.codex_filters.get_filters = function() {
 var performSearch = function() {
   var url = '';
   $.each(CodexFilters.get_all_filter_names(), function(k, filter_name) {
-    var elem = $('.search_inputs [name="query_' + filter_name + '"]');
+    var elem = $('.filter_inputs [name="query_' + filter_name + '"]');
     if (elem) {
       text = elem.val();
       if (text && text != '') {

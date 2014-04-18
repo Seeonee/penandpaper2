@@ -1,5 +1,5 @@
 <template name="codex_filters">
-  <div class="search_inputs">
+  <div class="filter_inputs column">
     {{#each get_filters}}
       {{#if is_text_filter}}
         {{name_pretty}}: <input type="text" class="text" name="query_{{name}}" value="{{value}}" />
@@ -11,7 +11,7 @@
         </select>
       {{/if}}
     {{/each}}
-    <input class="submit_button" type="submit" value="Filter" />
+    <input type="submit" class="submit_button" value="Filter" />
   </div>
 </template>
 

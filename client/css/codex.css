@@ -1,0 +1,24 @@
+
+/* Link for creating new entries. */
+.add {
+  padding-bottom: 60px;
+}
+.add_more {
+  width: 100%;
+  margin: 30px auto;
+  padding: 20px 0 20px 0;
+  cursor: pointer;
+  font-family: 'Verdana';
+  font-size: 24px;
+  text-align: center;
+}
+.add_more:hover {
+  background-color: #e1e1e1;
+  color: #c8012e;
+}
+
+/* For now, this removes the excess <div>s while adding text. */
+.document .info .text .value {
+  display: inline-block;
+}
+
