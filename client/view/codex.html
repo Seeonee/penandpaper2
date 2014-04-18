@@ -7,8 +7,10 @@
     {{/each}}
     {{> new_codex_dialog}}
   </div>
-  <div class="add column">
-    <div class="add_more">Add...</div>
-  </div>
+  {{#if can_edit}}
+    <div class="add column">
+      <div class="add_more">Add...</div>
+    </div>
+  {{/if}}
 </template>
 

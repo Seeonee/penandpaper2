@@ -21,4 +21,39 @@
   background-color: #fff;
   z-index: 101;
   padding: 20px;
+  border: 1px solid #000;
 }
+.dialog_modal h3 {
+  margin-top: 0;
+  text-align: center;
+  color: #c8012e;
+  font-family: Verdana;
+}
+.dialog_modal .tag {
+  display: inline-block;
+  width: 60px;
+  font-family: "Scada", sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: right;
+}
+.dialog_modal input.text {
+  vertical-align: text-top;
+  display: inline-block;
+  width: 427px;
+}
+
+/* Special formatting for the big text area. */
+.dialog_modal .text .tag {
+  vertical-align: top;
+}
+.dialog_modal .text textarea {
+  width: 425px;
+}
+
+/* Buttons should pull right. */
+.dialog_modal .buttons {
+  text-align: right;
+  margin-right: 20px;
+}
+

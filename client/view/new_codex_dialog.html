@@ -3,20 +3,37 @@
     <div class="dialog_mask">
     <div class="dialog_modal">
       <div>
-        <h3>New Codex Entry</h3>
+        <h3>NEW CODEX ENTRY</h3>
         <div class="dialog-body">
           {{#with codice_being_created}}
             {{#if error}}
               <h2 class="error">{{error}}</h2>
             {{/if}}
-            Name: <input type="text" class="text" name="new_codex_name" value="{{name}}" />
-            Level: <input type="text" class="text" name="new_codex_level" value="{{level}}" />
-            Slots: <input type="text" class="text" name="new_codex_slots" value="{{slots}}" />
-            Types: <input type="text" class="text" name="new_codex_types" value="{{types}}" />
-            Text: <textarea class="text" name="new_codex_text" rows="10" cols="40">{{text}}</textarea>
+            <div class="name">
+              <div class="tag">NAME:</div>
+              <input type="text" class="text" name="new_codex_name" value="{{name}}" />
+            </div>
+            <div class="slots">
+              <div class="tag">SLOTS:</div>
+              <input type="text" class="text" name="new_codex_slots" value="{{slots}}" />
+            </div>
+            <div class="types">
+              <div class="tag">TYPES:</div>
+              <input type="text" class="text" name="new_codex_types" value="{{types}}" />
+            </div>
+            <div class="level">
+              <div class="tag">LEVEL:</div>
+              <input type="text" class="text" name="new_codex_level" value="{{level}}" />
+            </div>
+            <div class="text">
+              <div class="tag">TEXT:</div>
+              <textarea class="text" name="new_codex_text" rows="10" cols="40">{{text}}</textarea>
+            </div>
           {{/with}}
-          <input type="button" class="dialog_submit_button" value="Submit" />
-          <input type="button" class="dialog_cancel_button" value="Cancel" />
+          <div class="buttons">
+            <input type="button" class="dialog_submit_button" value="Submit" />
+            <input type="button" class="dialog_cancel_button" value="Cancel" />
+          </div>
         </div>
       </div>
     </div></div>

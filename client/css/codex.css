@@ -17,8 +17,3 @@
   color: #c8012e;
 }
 
-/* For now, this removes the excess <div>s while adding text. */
-.document .info .text .value {
-  display: inline-block;
-}
-

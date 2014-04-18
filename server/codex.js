@@ -8,7 +8,10 @@ Meteor.publish("codex", function () {
     slots: 1,
     types: 1,
     text: 1,
-    bonuses: 1
+    bonuses: 1,
+    created_by: 1,
+    updated_by: 1,
+    last_modified_on: 1
   }});
 });
 
@@ -75,7 +78,7 @@ Meteor.methods({
     if (options.text.length > 1000) {
       throw new Meteor.Error(413, "Text too long");
     }
-
+    
     // Put it in!
     var id = Random.id();
     Codex.insert({
@@ -85,7 +88,9 @@ Meteor.methods({
       slots: options.slots,
       types: options.types,
       text: options.text,
-      bonuses: []
+      bonuses: [],
+      created_by: Meteor.user().emails[0].address,
+      last_modified_on: Date.now()
     });
     return id;
   },
@@ -182,7 +187,9 @@ Meteor.methods({
       slots: options.slots,
       types: options.types,
       text: options.text,
-      bonuses: []
+      bonuses: [],
+      updated_by: Meteor.user().emails[0].address,
+      last_modified_on: Date.now()
     }});
   }
 });
@@ -234,7 +241,9 @@ Meteor.startup(function() {
       slots: ['one_handed_weapon'],
       types: ['martial', 'weapon', 'dagger', 'parry'],
       text: 'It\'s a tiny knife!',
-      bonuses: []});
+      bonuses: [],
+      created_by: 'kevin@mail.com',
+      last_modified_on: Date.now()});
     Codex.insert({
       _id: Random.id(),
       name: 'SWORD', 
@@ -242,7 +251,9 @@ Meteor.startup(function() {
       slots: ['one_handed_weapon', 'two_handed_weapon'],
       types: ['martial', 'weapon', 'sword', 'parry'],
       text: 'It\'s a sword!',
-      bonuses: []});
+      bonuses: [],
+      created_by: 'kevin@mail.com',
+      last_modified_on: Date.now()});
     Codex.insert({
       _id: Random.id(),
       name: 'WAND', 
@@ -250,7 +261,9 @@ Meteor.startup(function() {
       slots: ['one_handed_weapon'],
       types: ['arcane', 'weapon', 'wand'],
       text: 'It\'s Harry Potter\'s!',
-      bonuses: []});
+      bonuses: [],
+      created_by: 'kevin@mail.com',
+      last_modified_on: Date.now()});
     Codex.insert({
       _id: Random.id(),
       name: 'BLINK', 
@@ -258,7 +271,10 @@ Meteor.startup(function() {
       slots: ['ability'],
       types: ['arcane', 'spell'],
       text: 'Teleport 5 spaces.',
-      bonuses: []});
+      bonuses: [],
+      created_by: 'kevin@mail.com',
+      last_modified_on: Date.now()});
   }
 });
+
 

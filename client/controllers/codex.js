@@ -44,9 +44,13 @@ Template.codex_entry.text_with_breaks = function() {
 }
 
 // Lite test for admin privileges.
-Template.codex_entry.can_edit = function() {
+var can_edit = function() {
   return PenAndPaperUtils.isUserAdmin();
 }
+
+// Attach it to various templates.
+Template.codex.can_edit = can_edit;
+Template.codex_entry.can_edit = can_edit;
 
 // This is fired whenever our "delete" attempt finishes
 // or fails.
