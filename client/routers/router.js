@@ -39,7 +39,10 @@ Router.map(function() {
     onRun: function() {
       var c = null;
       if (this.params.name) {
-        c = Characters.findOne({name: this.params.name});
+        c = Characters.findOne({name: {
+          $regex: RegExp.quote(this.params.name),
+          $options: 'i'
+        }});
       }
       if (c) {
         Session.set('selected_character', c.name);

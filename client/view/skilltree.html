@@ -1,0 +1,41 @@
+<template name="skilltree">
+  <div class="skilltree column">
+    {{#each sections}}
+      {{> skilltree_section}}
+    {{/each}}
+  </div>
+</template>
+
+<template name="skilltree_section">
+    <div class="section {{section}}">
+      {{#each subsections}}
+        {{> skilltree_heading}}
+      {{/each}}
+    </div>
+</template>
+
+<template name="skilltree_heading">
+  <div class="skilltree_heading {{heading}}">
+    {{banner}}
+  </div>
+  {{#each tiles}}
+    {{> skilltree_tile}}
+  {{/each}}
+</template>
+
+<template name="skilltree_tile">
+  <!-- TODO: clickable and active should be applied dynamically! -->
+  <div class="tile background {{name}} {{clickable}} {{active}}" data-instance="{{slot_id}}">
+    <div class="name">
+      {{name_pretty}}
+    </div>
+    <div class="equipped-name">
+      {{equipped_name}}
+    </div>
+    <div class="bottomRowContainer">
+      <div class="level">LEVEL</div>
+      <!-- TODO: levelBox elements should be created dynamically! -->
+    </div>
+  </div>
+</template>
+

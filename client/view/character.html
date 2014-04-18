@@ -1,12 +1,70 @@
 <template name="character">
-  {{#if is_character_selected}}
-    {{#with selected_character}}
-      <h1>{{name}}</h1>
-      <p>This is the "Character" page for {{name}}.</p>
-    {{/with}}
-  {{else}}
-    <h1>Sorry...</h1>
-    <p>That character doesn't exist yet.</p>
+  <div class="character column">
+    {{#if is_character_selected}}
+      {{#with selected_character}}
+          <h1>{{name}}</h1>
+          <h2 class="details">{{details}}</h2>
+          {{> character_points}}
+          {{> character_attributes}}
+          {{> character_devotions}}
+          {{> character_skills}}
+          <h3>Skilltree</h3>
+          {{> skilltree}}
+      {{/with}}
+    {{else}}
+      <h1>Sorry...</h1>
+      <p>That character doesn't exist yet.</p>
+    {{/if}}
+  </div>
+</template>
+
+<template name="character_points">
+  <div class="points">
+    <h3>Points Remaining</h3>
+    {{#each points}}
+      <div class="point">
+        <div class="tag">{{name}}</div>
+        <div class="value">{{value}}</div>
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+<template name="character_attributes">
+  <div class="attributes">
+    <h3>Attributes</h3>
+    {{#each attributes}}
+      <div class="attribute">
+        <div class="tag">{{name}}</div>
+        <div class="value">{{value}}</div>
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+<template name="character_devotions">
+  {{#if is_devoted}}
+    <div class="devotions">
+      <h3>Devotion</h3>
+      {{#each devotions}}
+        <div class="devotion">
+          <div class="tag">{{name}}</div>
+          <div class="value">{{value}}</div>
+        </div>
+      {{/each}}
+    </div>
   {{/if}}
+</template>
+
+<template name="character_skills">
+  <div class="skills">
+    <h3>Skills</h3>
+    {{#each skills}}
+      <div class="skill">
+        <div class="tag">{{name}}</div>
+        <div class="value">{{value}}</div>
+      </div>
+    {{/each}}
+  </div>
 </template>
 

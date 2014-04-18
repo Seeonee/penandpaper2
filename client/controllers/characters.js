@@ -3,22 +3,33 @@
  */
 Meteor.subscribe("characters");
 
-// Get the list of all characters for this user.
-Template.characters.characters = function() {
-  return Characters.find({}, {sort: {owner: -1, created: -1}});
+// Get a list of all unique owners.
+Template.characters.get_owners = function() {
+  var owners = {};
+  // TODO: First sort by last_modified_on or level? !!!
+  Characters.find({}, {sort: {owner: 1, name: 1}}).forEach(function(character) {
+    var owner = character.owner;
+    if (!(owner in owners)) {
+      owners[owner] = {
+        name: owner,
+        characters: []
+      };
+    }
+    owners[owner].characters.push(character);
+  });
+  return _.map(owners, function(owner) {
+    return owner;
+  });
 }
 
-// Get formatted dates.
-var formatDate = function(epoch) {
-  return new Date(epoch);
-}
-
+// Date a character was created.
 Template.characters.date_created = function() {
-  return formatDate(this.created);
+  return PenAndPaperUtils.formatDate(this.created);
 }
 
+// Date a character was last modified.
 Template.characters.date_modified = function() {
-  return formatDate(this.modified);
+  return PenAndPaperUtils.formatDate(this.modified);
 }
 
 // Format a character's skill list.
@@ -35,24 +46,5 @@ Template.characters.characters_exist = function() {
 // Get the message to display when no characters are found.
 Template.characters.no_characters = function() {
   return 'No one\'s created any characters yet.';
-}
-
-// Figure out if a character is selected.
-Template.character.is_character_selected = function() {
-  return Session.get('selected_character');
-}
-
-// Get the selected character.
-Template.character.selected_character = function() {
-  return Characters.findOne({name: Session.get('selected_character')});
-}
-
-// Get the logged-in user's email address.
-var getOwner = function() {
-  var user = Meteor.user();
-  if (user) {
-    return user.emails[0].address;
-  }
-  return null;
 }
 
