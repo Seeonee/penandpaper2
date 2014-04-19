@@ -95,16 +95,9 @@ Template.skilltree_tile.levelboxes = function() {
         // Since nothing further's been learned,
         // this slot can be clicked to unlearn it.
         // Unless! The slot may need to be unequipped first.
-        
-        // TODO: is it equipped?
-        // TODO: is it equipped?
-        // TODO: is it equipped?
-        // TODO: is it equipped?
-        // TODO: is it equipped?
-        // TODO: is it equipped?
-        // TODO: is it equipped?
-        
-        attributes.push('clickable');
+        if (slot.equipped == null) {
+          attributes.push('clickable');
+        }
       }
     } else {
       if (current.learned_by_default == 1) {

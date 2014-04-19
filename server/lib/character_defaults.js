@@ -299,7 +299,7 @@ CharacterDefaults.createEmptySlots = function() {
   // Armor.
   slots.armor = {
     1: {
-      cost: 0,
+      cost: 1,
       filled: 0,
       lock: 0,
       unlocked: 0

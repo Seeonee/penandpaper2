@@ -108,7 +108,7 @@ Meteor.methods({
     }
     var slot = null;
     if (options.slot_id) {
-      options.slot_id = options.slot_id - 1;
+      options.slot_id = options.slot_id - 1; // Switch to zero-based index.
       if (options.slot_id >= edited_slots.length) {
         throw new Meteor.Error(403, "Slot does not exist");
       }
@@ -134,7 +134,7 @@ Meteor.methods({
     }
     var next_levelbox = null;
     if ((options.slot_level + 1) in slot) {
-      previous_levelbox = slot[options.slot_level + 1];
+      next_levelbox = slot[options.slot_level + 1];
     }
     // Time to make sure someone didn't send us homemade inputs...
     options.clear = options.clear || false;
@@ -154,7 +154,7 @@ Meteor.methods({
       } else {
         // We can't fill it if the previous box is unfilled.
         if (previous_levelbox != null) {
-          if (previous_levelbox.fill == 0 && !previous_levelbox.learned_by_default) {
+          if (previous_levelbox.filled == 0 && !previous_levelbox.learned_by_default) {
             throw new Meteor.Error(403, "Fill previous slot level first");
           }
         }
@@ -174,12 +174,11 @@ Meteor.methods({
             throw new Meteor.Error(403, "Clear previous slot level first");
           }
         }
-        // TODO: Make sure nothing's equipped!
-        // TODO: Make sure nothing's equipped!
-        // TODO: Make sure nothing's equipped!
-        // TODO: Make sure nothing's equipped!
-        // TODO: Make sure nothing's equipped!
-        // TODO: Make sure nothing's equipped!
+        // (Or if something's equipped.)
+        if (slot.equipped != null) {
+          throw new Meteor.Error(403, "Unequip slot first");
+        }
+
         character_do_clear(character, options.slot_name, options.slot_id, options.slot_level);
       } else if (levelbox.lock == 1) {
         // We can't relock it if the previous box is unlocked.
@@ -233,7 +232,7 @@ var character_do_relock = function(character, slot_name, slot_id, slot_level) {
 // Create a $set key for a particular slot's levelbox.
 var create_key = function(slot_name, slot_id, slot_level) {
   var key = 'slots.' + slot_name;
-  if (slot_id) {
+  if (slot_id != null) {
     key += '.' + slot_id;
   }
   key += '.' + slot_level;
