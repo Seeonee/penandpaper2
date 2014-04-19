@@ -25,7 +25,7 @@
 
 <template name="skilltree_tile">
   <!-- TODO: clickable and active should be applied dynamically! -->
-  <div class="tile background {{name}} {{clickable}} {{active}}" data-instance="{{slot_id}}">
+  <div class="tile background {{name}} {{clickable}} {{activated}}" data-instance="{{slot_id}}">
     <div class="name">
       {{name_pretty}}
     </div>
@@ -34,7 +34,9 @@
     </div>
     <div class="bottomRowContainer">
       <div class="level">LEVEL</div>
-      <!-- TODO: levelBox elements should be created dynamically! -->
+      {{#each levelboxes}}
+        <div class="levelBox {{attributes}}" data-level="{{level}}"></div>
+      {{/each}}
     </div>
   </div>
 </template>

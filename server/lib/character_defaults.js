@@ -6,7 +6,7 @@ CharacterDefaults = {};
 // should never drop negative.
 CharacterDefaults.points = {
   skill_points: 8,
-  key_points: 0
+  key_points: 3
 };
 
 // Stats that are affected by various equipped slots.
@@ -166,7 +166,7 @@ CharacterDefaults.createEmptySlots = function() {
       filled: 0,
       lock: 0,
       unlocked: 0,
-      default: 1
+      learned_by_default: 1
     },
     2: {
       cost: 1,

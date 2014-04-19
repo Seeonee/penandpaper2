@@ -26,8 +26,8 @@ Template.skilltree_tile.clickable = function() {
 
 // Is a tile activated?
 // I.e. is anything equipped to it?
-Template.skilltree_tile.active = function() {
-  return (this.slot.equipped) ? 'active' : '';
+Template.skilltree_tile.activated = function() {
+  return (this.slot.equipped) ? 'activated' : '';
 }
 
 // Some slots have more than one instance.
@@ -52,4 +52,134 @@ Template.skilltree_tile.equipped_name = function() {
   }
   return name;
 }
+
+// Get the list of level boxes.
+Template.skilltree_tile.levelboxes = function() {
+  var slot = this.slot;
+  var num_slots = _.size(slot);
+  if ('slot_id' in slot) {
+    --num_slots;
+  }
+  var levelboxes = [];
+  
+  var skillPointsRemaining = 0;
+  var keyPointsRemaining = 0;
+  var char_name = Session.get('selected_character');
+  if (char_name) {
+    var character = Characters.findOne({name: char_name});
+    if (character) {
+      skillPointsRemaining = character.points.skill_points - character.points_spent.skill_points;
+      keyPointsRemaining = character.points.key_points - character.points_spent.key_points;
+    }
+  }
+  
+  var previous = null;
+  var current = (num_slots >= 1) ? slot[1] : null;
+  var next = (num_slots >= 2) ? slot[2] : null;
+  // Note the iteration from 1 to less-than-or-equal-to size...
+  for (var i = 1; i <= num_slots; i++) {
+    // If we got here, current can't be null.
+    var attributes = [];
+    // Some skills are freebies.
+    if (current.cost == 0 && current.lock == 0 && !current.learned_by_default) {
+      attributes.push('free');
+    }
+    if (current.filled == 1) {
+      // This slot's been learned.
+      attributes.push('activated');
+      if (current.unlocked == 1) {
+        // It had to be unlocked, though.
+        attributes.push('unlocked');
+      }
+      if (next == null || next.filled == 0) {
+        // Since nothing further's been learned,
+        // this slot can be clicked to unlearn it.
+        // Unless! The slot may need to be unequipped first.
+        
+        // TODO: is it equipped?
+        // TODO: is it equipped?
+        // TODO: is it equipped?
+        // TODO: is it equipped?
+        // TODO: is it equipped?
+        // TODO: is it equipped?
+        // TODO: is it equipped?
+        
+        attributes.push('clickable');
+      }
+    } else {
+      if (current.learned_by_default == 1) {
+        attributes.push('default');
+        // This slot can never be clicked, but
+        // it still might be filled in.
+        if (next != null && next.filled == 1) {
+          attributes.push('activated')
+        }
+      } else {
+        if (current.lock == 1) {
+          // Locked by default...
+          if (current.unlocked == 0) {
+            // ...and currently not unlocked.
+            attributes.push('locked');
+            // It can only be unlocked if with a key...
+            if (keyPointsRemaining) {
+              // ...provided the previous slot is already unlocked.
+              if (previous == null || previous.lock == 0 || previous.unlocked == 1) {
+                // It can be unlocked! Make it clickable.
+                attributes.push('clickable');
+              }
+            }
+          } else {
+            // It's been unlocked already.
+            attributes.push('unlocked');
+            if (current.filled == 0 && (previous == null || previous.unlocked == 0)) {
+              // It can be re-locked.
+              attributes.push('clickable');
+            }
+          }
+        } else {
+          // Not yet learned, not locked...
+          if (skillPointsRemaining) {
+            // ...and we have points to spend...
+            if (previous == null || previous.filled > 0 || previous.learned_by_default) {
+              // And we've learned all the prerequisites!
+              attributes.push('clickable');
+            }
+          }
+        }
+      }
+    }
+    previous = current;
+    current = next;
+    next = (i < num_slots) ? slot[i + 2] : null;
+    levelboxes.push({
+      level: i - 1,
+      attributes: attributes.join(' ')
+    });
+  }
+  return levelboxes;
+}
+
+// Listen for fill and unlock events.
+Template.skilltree_tile.events({
+  'click .levelBox.clickable': function(evt, template) {
+    var options = {
+      character_name: Session.get('selected_character'),
+      slot_name: template.data.name.replace(' ', '_'),
+      slot_level: $(evt.target).data().level + 1
+    }
+    if (template.data.id) {
+      options.slot_id = template.data.id;
+    }
+    if (evt.ctrlKey) {
+      options.clear = true;
+    }
+    Meteor.call('characterLevelbox', options, function(err, result) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
+});
+
+
 

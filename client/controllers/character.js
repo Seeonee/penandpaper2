@@ -39,9 +39,11 @@ Template.character.details = function() {
 
 // Get the character's skill and key points.
 Template.character_points.points = function() {
+  var points_spent = this.points_spent;
   return _.map(this.points, function(value, key) {
+    var adjusted_value = value - points_spent[key];
     key = PenAndPaperUtils.deunderscore(key);
-    return {name: key, value: value};
+    return {name: key, value: adjusted_value};
   });
 }
 

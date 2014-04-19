@@ -200,11 +200,13 @@ var isAdmin = function() {
 }
 
 // Match functions.
+// Match a nonempty string.
 var NonEmptyString = Match.Where(function(x) {
   check(x, String);
   return x.trim().length !== 0;
 });
 
+// Match a comma-separated list of nonempty strings.
 var ListOfNonEmptyStrings = Match.Where(function(x) {
   check(x, String);
   _.each(x.split(','), function(element) {
@@ -215,6 +217,7 @@ var ListOfNonEmptyStrings = Match.Where(function(x) {
   return true;
 });
 
+// Match a comma-separated list of valid slot names.
 var ListOfValidSlots = Match.Where(function (x) {
   check(x, String);
   var slots = SlotsUtils.all();
@@ -226,6 +229,7 @@ var ListOfValidSlots = Match.Where(function (x) {
   return true;
 });
 
+// Match a string which can be int'd.
 var IntegerAsString = Match.Where(function(x) {
   check(x, String);
   return parseInt(x);

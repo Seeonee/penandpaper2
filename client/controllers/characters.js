@@ -32,12 +32,6 @@ Template.characters.date_modified = function() {
   return PenAndPaperUtils.formatDate(this.modified);
 }
 
-// Format a character's skill list.
-// TODO: Move to a method on the character model.
-Template.characters.skills_list = function() {
-  return this.skills.join(', ');
-}
-
 // Figure out if the user has any characters.
 Template.characters.characters_exist = function() {
   return Characters.findOne();
