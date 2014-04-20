@@ -1,11 +1,27 @@
 <template name="home">
-  <h1>Home</h1>
+  <div class="user_home column">
+    {{#if get_user}}
+      {{> user_home}}
+    {{else}}
+      <div class="error not_logged_in">Log in to create your own characters.</div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="user_home">
+  <h1>Welcome, {{get_user}}</h1>
   {{#if has_characters}}
-    {{#each characters}}
-      <h3>{{name}}</h3>
-    {{/each}}
+    <div class="user_characters">
+      <h2>Your characters:</h2>
+      {{#each characters}}
+        <a class="user_character" href="{{pathFor 'character' name=this.name}}">
+          <div class="name">{{name}}</div>
+          <div class="details">these are some details!</div>
+        </a>
+      {{/each}}
+    </div>
   {{else}}
-    <p>{{no_characters}}</p>
+    <div class="error no_characters">You haven't created any characters yet.</div>
   {{/if}}
 </template>
 

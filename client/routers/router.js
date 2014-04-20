@@ -34,7 +34,7 @@ Router.map(function() {
   
   // Page showing a single character by name.
   this.route('character', {
-    path: 'characters/:name?',
+    path: 'characters/:name?/:edit?',
     waitOn: charactersReady,
     onRun: function() {
       var c = null;
@@ -46,6 +46,11 @@ Router.map(function() {
       }
       if (c) {
         Session.set('selected_character', c.name);
+      }
+      if (this.params.edit === 'edit') {
+        Session.set('editing_character', true);
+      } else {
+        Session.set('editing_character', null);
       }
     },
     action: function() {

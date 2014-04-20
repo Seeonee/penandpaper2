@@ -20,36 +20,19 @@ CharacterDefaults.attributes = {
 // Devotion to particular gods.
 // The 'any' devotion gets lumped into 
 // a single devotion of the character's (player's) chosing.
-CharacterDefaults.devotions = {
-  any: 0,
-  death: 0,
-  fae: 0,
-  sea: 0,
-  storm: 0,
-  sun: 0,
-  war: 0,
-  wisdom: 0
-};
+CharacterDefaults.devotions = {any: 0};
+_.forEach(Deities.all(), function(deity) {
+  CharacterDefaults.devotions[deity] = 0;
+});
 
 // These are used for skill checks.
-CharacterDefaults.skills = {
-  might: {
+CharacterDefaults.skills = {};
+_.forEach(SkillChecks.all(), function(skill) {
+  CharacterDefaults.skills[skill] = {
     active: 0,
     passive: 0
-  },
-  wit: {
-    active: 0,
-    passive: 0
-  },
-  stealth: {
-    active: 0,
-    passive: 0
-  },
-  presence: {
-    active: 0,
-    passive: 0
-  }
-}
+  };
+});
 
 // The BIG one! This lays out the default slots
 // that a character can equip, as well as their costs,

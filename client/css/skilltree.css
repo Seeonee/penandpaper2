@@ -1,12 +1,10 @@
 /* Laying out the sections of the skill tree. */
-.skilltree {
-  padding-top: 60px; /* Keep this in sync with the header's height! */
-}
 .section {
   position: relative;
   padding: 25px;
   text-align: center;
 }
+
 .skilltree_heading {
   font-family: "Scada", sans-serif;
   font-size: 24px;

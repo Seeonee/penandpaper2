@@ -2,14 +2,20 @@
   <div class="character column">
     {{#if is_character_selected}}
       {{#with selected_character}}
+          {{#if owns}}
+            {{> character_nav}}
+          {{/if}}
           <h1>{{name}}</h1>
           <h2 class="details">{{details}}</h2>
-          {{> character_points}}
-          {{> character_attributes}}
-          {{> character_devotions}}
-          {{> character_skills}}
-          <h3>Skilltree</h3>
-          {{> skilltree}}
+          {{#if editing}}
+            {{#if owns}}
+              {{> skilltree}}
+            {{else}}
+              <div class="error invalid_edit">You don't have permission to edit this character.</div>
+            {{/if}}
+          {{else}}
+          {{> character_summary}}
+          {{/if}}
       {{/with}}
     {{else}}
       <h1>Sorry...</h1>
@@ -18,11 +24,39 @@
   </div>
 </template>
 
+<template name="character_nav">
+  <div class="char_nav_shell column">
+    <div class="char_nav">
+      {{#if editing}}
+        <div class="points skill_points">
+          <div class="tag">Skill points:</div>
+          <div class="value">{{skill_points_remaining}}</div>
+        </div>
+        <div class="points key_points">
+          <div class="tag">Key points:</div>
+          <div class="value">{{key_points_remaining}}</div>
+        </div>
+        <div class="divider"></div>
+        <a href="{{pathFor 'character' name=this.name}}" class="summary">SUMMARY</a>
+      {{else}}
+        <a href="{{pathFor 'character' name=this.name edit='edit'}}" class="edit">EDIT</a>
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="character_summary">
+  {{> character_points}}
+  {{> character_attributes}}
+  {{> character_devotions}}
+  {{> character_skills}}
+</template>
+
 <template name="character_points">
-  <div class="points">
-    <h3>Points Remaining</h3>
+  <div class="character_section points">
+    <h3>POINTS REMAINING</h3>
     {{#each points}}
-      <div class="point">
+      <div class="row point">
         <div class="tag">{{name}}</div>
         <div class="value">{{value}}</div>
       </div>
@@ -31,10 +65,10 @@
 </template>
 
 <template name="character_attributes">
-  <div class="attributes">
-    <h3>Attributes</h3>
+  <div class="character_section attributes">
+    <h3>ATTRIBUTES</h3>
     {{#each attributes}}
-      <div class="attribute">
+      <div class="row attribute">
         <div class="tag">{{name}}</div>
         <div class="value">{{value}}</div>
       </div>
@@ -44,10 +78,10 @@
 
 <template name="character_devotions">
   {{#if is_devoted}}
-    <div class="devotions">
-      <h3>Devotion</h3>
+    <div class="character_section devotions">
+      <h3>DEVOTION</h3>
       {{#each devotions}}
-        <div class="devotion">
+        <div class="row devotion">
           <div class="tag">{{name}}</div>
           <div class="value">{{value}}</div>
         </div>
@@ -57,11 +91,11 @@
 </template>
 
 <template name="character_skills">
-  <div class="skills">
-    <h3>Skills</h3>
+  <div class="character_section skills">
+    <h3>SKILLS</h3>
     {{#each skills}}
-      <div class="skill">
-        <div class="tag">{{name}}</div>
+      <div class="row skill">
+        <div class="tag">{{name}}:</div>
         <div class="value">{{value}}</div>
       </div>
     {{/each}}

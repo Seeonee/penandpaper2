@@ -1,35 +1,24 @@
-// Get the list of all characters for this user.
-Template.home.characters = function() {
-  return Characters.find({owner: getOwner()}, {sort: {modified: -1, name: -1}});
-}
-
-// Format a character's skill list.
-// TODO: Move to a method on the character model.
-Template.home.skills_list = function() {
-  return this.skills.join(', ');
-}
-
-// Figure out if the user has any characters.
-Template.home.has_characters = function() {
-  return Characters.findOne({owner: getOwner()});
-}
-
-// Get the message to display when no characters are found.
-Template.home.no_characters = function() {
-  var user = Meteor.user();
-  if (user) {
-    return 'You haven\'t created any characters yet.';
-  } else {
-    return 'Log in to create characters.';
-  }
-}
 
 // Get the logged-in user's email address.
-var getOwner = function() {
+var get_user = function() {
   var user = Meteor.user();
   if (user) {
     return user.emails[0].address;
   }
   return null;
+}
+
+// Use this to tell if we're logged in.
+Template.home.get_user = get_user;
+Template.user_home.get_user = get_user;
+
+// Figure out if the user has any characters.
+Template.user_home.has_characters = function() {
+  return Characters.findOne({owner: get_user()});
+}
+
+// Get the list of all characters for this user.
+Template.user_home.characters = function() {
+  return Characters.find({owner: get_user()}, {sort: {modified: -1, name: -1}});
 }
 

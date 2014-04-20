@@ -1,2 +1,8 @@
 Add a mechanism to add bonuses. These probably don't need to be displayed, since they're encapsulated in the text anyways.
 Add a distinction between player and monster codices.
+Refactor all the "Character" stuff into helpers that accept a database of characters (PCs or NPCs) and an entity from that database.
+Add styling for the character attributes.
+Split up the character page into a summary and an edit view.
+Add a color pallette and redo the styling on the tiles to incorporate it.
+Use LESS to define color constants (and maybe more).
+Make it possible to clear levelboxes as long as the equipped skill is a lower level.

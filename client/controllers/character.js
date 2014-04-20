@@ -9,6 +9,18 @@ Template.character.selected_character = function() {
   return Characters.findOne({name: Session.get('selected_character')});
 }
 
+// Are we trying to edit the character?
+var editing = function() {
+  return Session.get('editing_character') != null;
+}
+Template.character.editing = editing;
+Template.character_nav.editing = editing;
+
+// Are we *allowed* to be editing this character?
+Template.character.owns = function() {
+  return (Meteor.userId && Meteor.user().emails[0].address == this.owner);
+}
+
 // Get the character's details as a quick summary.
 Template.character.details = function() {
   var details = '';
@@ -37,6 +49,16 @@ Template.character.details = function() {
   return level + details;
 }
 
+// Get the remaining skill points.
+Template.character_nav.skill_points_remaining = function() {
+  return this.points.skill_points - this.points_spent.skill_points;
+}
+
+// Get the remaining key points.
+Template.character_nav.key_points_remaining = function() {
+  return this.points.key_points - this.points_spent.key_points;
+}
+
 // Get the character's skill and key points.
 Template.character_points.points = function() {
   var points_spent = this.points_spent;
@@ -46,6 +68,9 @@ Template.character_points.points = function() {
     return {name: key, value: adjusted_value};
   });
 }
+
+
+
 
 // Get the character's attributes.
 Template.character_attributes.attributes = function() {

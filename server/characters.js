@@ -2,20 +2,7 @@
  * Character model.
  */
 Meteor.publish("characters", function () {
-  return Characters.find({}, {fields: {
-    name: 1, 
-    level: 1,
-    points: 1,
-    points_spent: 1,
-    attributes: 1,
-    devotions: 1,
-    skills: 1,
-    slots: 1,
-    
-    owner: 1, 
-    created: 1,
-    last_modified_on: 1
-  }});
+  return Characters.find({}, {fields: GenericCharacters.publish_fields});
 });
 
 // Set up access permissions.
@@ -311,6 +298,18 @@ var createCharacter = function(name, owner) {
     throw new Meteor.Error(403, "Character name '" + name + "' already exists");
   }
   
+  // Default devotions.
+  var devotions = {};
+   _.forEach(CharacterDefaults.devotions, function(value, key) {
+    devotions[key] = value;
+  });
+  
+  // Default skill checks.
+  var skills = {};
+  _.forEach(CharacterDefaults.skills, function(value, key) {
+    skills[key] = value;
+  }); 
+  
   // Make a nice default batch of slots.
   var slots = CharacterDefaults.createEmptySlots();
   
@@ -334,34 +333,8 @@ var createCharacter = function(name, owner) {
       speed: CharacterDefaults.attributes.speed,
       wounds_per_battle: CharacterDefaults.attributes.wounds_per_battle
     },
-    devotions: {
-      any: CharacterDefaults.devotions.any,
-      death: CharacterDefaults.devotions.death,
-      fae: CharacterDefaults.devotions.fae,
-      sea: CharacterDefaults.devotions.sea,
-      storm: CharacterDefaults.devotions.storm,
-      sun: CharacterDefaults.devotions.sun,
-      war: CharacterDefaults.devotions.war,
-      wisdom: CharacterDefaults.devotions.wisdom
-    },
-    skills: {
-      might: {
-        active: CharacterDefaults.skills.might.active,
-        passive: CharacterDefaults.skills.might.passive
-      },
-      wit: {
-        active: CharacterDefaults.skills.wit.active,
-        passive: CharacterDefaults.skills.wit.passive
-      },
-      stealth: {
-        active: CharacterDefaults.skills.stealth.active,
-        passive: CharacterDefaults.skills.stealth.passive
-      },
-      presence: {
-        active: CharacterDefaults.skills.presence.active,
-        passive: CharacterDefaults.skills.presence.passive
-      }
-    },
+    devotions: devotions,
+    skills: skills,
     slots: slots,
     
     date_created: Date.now(),

@@ -4,29 +4,44 @@
   margin: 20px auto;
   width: 150px;
   height: 150px;
-  border: 4px solid #c1c1c1;
+  border-style: solid;
+  border-width: 4px;
   padding: 5px;
   text-align: center;
   cursor: default;
-  color: #000;
-  background-color: #fff;
   background-repeat: no-repeat;
   background-position: center;
 }
+
+/* Tile colors (for the default disabled look). */
+.tile {
+  color: #000;
+  background-color: #fff;
+  border-color: #c1c1c1;
+}
+
+/* Make upgrade tiles a bit smaller. */
 .tile.upgrade {
   margin: 30px auto;
   width: 130px;
   height: 130px;
 }
+
+/* Styling for the tile name area. */
 .tile .name {
   position: absolute;
   top: 0px;
   left: 0px;
   width: 100%;
   font-size: 16px;
+}
+
+/* Tile name color when unequipped. */
+.tile .name {
   color: #000;
 }
 
+/* Styling for the name of what's equipped in the slot. */
 .tile .equipped-name {
   display: none;
   position: absolute;
@@ -35,27 +50,48 @@
   width: 100%;
   font-family: "Scada", sans-serif;
   font-size: 18px;
+}
+
+/* Color for the equipped name. */
+.tile .equipped-name {
   color: #c8012e;
 }
 
+/* Container for the level label and boxes. */
 .tile .bottomRowContainer {
   position: absolute;
   right: 0px;
   bottom: 0px;
 }
+
+/* The level label. */
 .tile .level {
   float: left;
-  color: #6e6e6e;
   margin: 0 2px 0 0;
   font-size: 16px;
 }
+
+/* Color for the level label when the slot's not equipped. */
+.tile .level {
+  color: #6e6e6e;
+}
+
+/* Styling for a levelbox that's not yet filled in. */
 .tile .levelBox {
   float: left;
   width: 18px;
   height: 18px;
-  border: 2px solid #6e6e6e;
+  border-style: solid;
+  border-width: 2px;
   margin: 2px;
 }
+
+/* Unfilled levelbox colors. */
+.tile .levelBox {
+  border-color: #6e6e6e;
+}
+
+/* Default levelbox styling. */
 .tile .levelBox.default {
   border-color: #c1c1c1;
   background-image: url("../images/default_inactive.png");
@@ -63,22 +99,38 @@
   background-position: center;
 }
 
-.tile .levelBox.locked {
+/* Default levelbox colors. */
+.tile .levelBox.default {
   border-color: #c1c1c1;
+}
+
+/* Styling for a locked levelbox. */
+.tile .levelBox.locked {
   background-image: url("../images/locked_unlock.png");
   background-repeat: no-repeat;
   background-position: center;
 }
+
+/* Locked levelbox colors. */
+.tile .levelBox.locked {
+  border-color: #c1c1c1;
+}
+
+/* Unlocked levelbox image overlay. */
 .tile .levelBox.unlocked {
   background-image: url("../images/locked_relock.png");
   background-repeat: no-repeat;
   background-position: center;
 }
+
+/* Free levelbox image overlay. */
 .tile .levelBox.free {
   background-image: url("../images/free.png");
   background-repeat: no-repeat;
   background-position: center;
 }
+
+/* Perma-locked levelbox image overlay; note that we never use this. */
 .tile .levelBox.unavailable {
   background-image: url("../images/unavailable.png");
   background-repeat: no-repeat;
@@ -86,56 +138,116 @@
 }
 
 /* Various parts of a tile which change while equipped. */
+/* Activated tile colors. */
 .tile.activated {
   border-color: #c8012e;
 }
+
+/* Activated tile colors for the name of the slot itself. */
 .tile.activated  .name {
   color: #c1c1c1;
 }
+
+/* Activated tile colors for the name of what's equipped. */
 .tile.activated .equipped-name {
   display: inline;
 }
+
+/* Activated tile colors for the level label. */
 .tile.activated .level {
   color: #c1c1c1;
 }
+
+/* Colors for a filled levelbox. */
 .tile .levelBox.activated {
   border-color: #c8012e;
   background-color: #c8012e;
 }
+
+/* Image overlay for a filled default levelbox. */
 .tile .levelBox.default.activated {
-  border-color: #c1c1c1;
   background-color: transparent;
   background-image: url("../images/default_active.png");
 }
 
-/* Highlight clickable elements. */
+/* Colors for a filled default levelbox. */
+.tile .levelBox.default.activated {
+  border-color: #c1c1c1;
+}
+
+/* Colors for a tile which can be equipped, but isn't yet. */
 .tile.clickable {
   border-color: #000;
 }
+
+/* Colors for a tile is equipped. */
 .tile.activated.clickable {
   border-color: #c8012e;
 }
-.clickable:hover {
+
+/* Colors for a tile that can be clicked and is being hovered over. */
+.tile.clickable:hover {
   border-color: #c8012e;
 }
+
+/* Colors for a levelbox that can be clicked and is being hovered over. */
+.tile .levelBox.clickable:hover {
+  border-color: #107195;
+}
+
+/* Colors for a levelbox that can be clicked and is being depressed. */
+.tile .levelBox.clickable:active {
+  border-color: #075c7b;
+}
+
+/* Hover behavior for levelbox borders. */
 .clickable.levelBox:hover {
   border-width: 3px;
   width: 16px;
   height: 16px;
 }
+
+/* Hover behavior and image overlay for locked levelboxes.
+   The border styling here is basically just canceling the 
+   border-thickening that levelboxes experience by default. */
 .tile .levelBox.locked.clickable:hover {
   border-width: 2px;
   width: 18px;
   height: 18px;
   background-image: url("../images/locked_unlock_hover.png");
 }
+
+/* Colors on a locked levelbox being hovered over. */
+.tile .levelBox.locked.clickable:hover, .tile .levelBox.locked.clickable:active {
+  border-color: #c1c1c1;
+}
+
+/* Image overlay for locked levelbox being depressed. */
+.tile .levelBox.locked.clickable:active {
+  background-image: url("../images/locked_unlock_depress.png");
+}
+
+/* Colors on the background of an equipped tile being hovered over. */
 .tile.activated:hover {
   background-color: #e1e1e1;
 }
+
+/* Border thickness for hovering over a filled levelbox. */
 .tile .levelBox.activated.clickable:hover {
-  background-color: #c1c1c1;
   border-width: 3px;
   width: 16px;
   height: 16px;
+}
+
+/* Colors for hovering over a filled levelbox. */
+.tile .levelBox.activated.clickable:hover {
+  border-color: #107195;
+  background-color: #107195;
+}
+
+/* Colors for depressing a filled levelbox. */
+.tile .levelBox.activated.clickable:active {
+  border-color: #075c7b;
+  background-color: #075c7b;
 }
 
