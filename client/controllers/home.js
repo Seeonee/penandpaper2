@@ -19,6 +19,6 @@ Template.user_home.has_characters = function() {
 
 // Get the list of all characters for this user.
 Template.user_home.characters = function() {
-  return Characters.find({owner: get_user()}, {sort: {modified: -1, name: -1}});
+  return CharacterSupport.characters_from_db_owned_by(Characters, get_user());
 }
 
