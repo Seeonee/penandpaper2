@@ -131,8 +131,9 @@ Template.skilltree_tile.levelboxes = function() {
           }
         } else {
           // Not yet learned, not locked...
-          if (skillPointsRemaining) {
-            // ...and we have points to spend...
+          var cost = current.cost;
+          if ((skillPointsRemaining - cost) >= 0) {
+            // ...and we can afford the cost...
             if (previous == null || previous.filled > 0 || previous.learned_by_default) {
               // And we've learned all the prerequisites!
               attributes.push('clickable');

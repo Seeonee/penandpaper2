@@ -125,7 +125,7 @@ Meteor.methods({
     // Okay, just about time to begin doing actual work.
     var skillPointsRemaining = character.points.skill_points - character.points_spent.skill_points;
     var keyPointsRemaining = character.points.key_points - character.points_spent.key_points;
-    
+        
     // Get the levelboxes we'll be working with.
     var levelbox = slot[options.slot_level];
     var previous_levelbox = null;
@@ -150,7 +150,15 @@ Meteor.methods({
             throw new Meteor.Error(403, "Unlock previous slot level first");
           }
         }
-        character_do_unlock(character, options.slot_name, options.slot_id, options.slot_level);
+        // Can we afford it?
+        if (keyPointsRemaining < 1) {
+          throw new Meteor.Error(403, "Not enough key points remaining");
+        }
+        character_do_unlock(
+          character, 
+          options.slot_name, 
+          options.slot_id, 
+          options.slot_level);
       } else {
         // We can't fill it if the previous box is unfilled.
         if (previous_levelbox != null) {
@@ -158,7 +166,16 @@ Meteor.methods({
             throw new Meteor.Error(403, "Fill previous slot level first");
           }
         }
-        character_do_fill(character, options.slot_name, options.slot_id, options.slot_level);
+        // Can we afford it?
+        if ((skillPointsRemaining - levelbox.cost) < 0) {
+          throw new Meteor.Error(403, "Not enough skill points remaining");
+        }
+        character_do_fill(
+          character, 
+          options.slot_name, 
+          options.slot_id, 
+          options.slot_level, 
+          levelbox.cost);
       }
     } else {
       // We're either clearing or relocking.
@@ -179,7 +196,16 @@ Meteor.methods({
           throw new Meteor.Error(403, "Unequip slot first");
         }
 
-        character_do_clear(character, options.slot_name, options.slot_id, options.slot_level);
+        // Can we afford it?
+        if ((skillPointsRemaining + levelbox.cost) < 0) {
+          throw new Meteor.Error(403, "You must clear other skill levels first");
+        }
+        character_do_clear(
+          character, 
+          options.slot_name, 
+          options.slot_id, 
+          options.slot_level, 
+          levelbox.cost);
       } else if (levelbox.lock == 1) {
         // We can't relock it if the previous box is unlocked.
         if (previous_levelbox != null) {
@@ -187,7 +213,11 @@ Meteor.methods({
             throw new Meteor.Error(403, "Relock previous slot level first");
           }
         }
-        character_do_relock(character, options.slot_name, options.slot_id, options.slot_level);
+        character_do_relock(
+          character, 
+          options.slot_name, 
+          options.slot_id, 
+          options.slot_level);
       }
     }
   }
@@ -195,19 +225,19 @@ Meteor.methods({
 
 // Fill in a slot. This assumes error checking's been done.
 // slot_id may be null.
-var character_do_fill = function(character, slot_name, slot_id, slot_level) {
+var character_do_fill = function(character, slot_name, slot_id, slot_level, cost) {
   var new_set = {};
   new_set[create_key(slot_name, slot_id, slot_level) + '.filled'] = 1;
-  new_set['points_spent.skill_points'] = character.points_spent.skill_points + 1;
+  new_set['points_spent.skill_points'] = character.points_spent.skill_points + cost;
   Characters.update({ _id: character._id}, { $set: new_set});
 }
 
 // Clear a slot. This assumes error checking's been done.
 // slot_id may be null.
-var character_do_clear = function(character, slot_name, slot_id, slot_level) {
+var character_do_clear = function(character, slot_name, slot_id, slot_level, cost) {
   var new_set = {};
   new_set[create_key(slot_name, slot_id, slot_level) + '.filled'] = 0;
-  new_set['points_spent.skill_points'] = character.points_spent.skill_points - 1;
+  new_set['points_spent.skill_points'] = character.points_spent.skill_points - cost;
   Characters.update({ _id: character._id}, { $set: new_set});
 }
 

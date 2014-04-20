@@ -417,7 +417,7 @@ CharacterDefaults.createEmptySlots = function() {
     {
       // First curse.
       1: {
-        cost: 1,
+        cost: -1,
         filled: 0,
         lock: 0,
         unlocked: 0
@@ -425,7 +425,7 @@ CharacterDefaults.createEmptySlots = function() {
     }, {
       // Second curse.
       1: {
-        cost: 1,
+        cost: -1,
         filled: 0,
         lock: 1,
         unlocked: 0
