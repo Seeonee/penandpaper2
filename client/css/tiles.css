@@ -104,6 +104,22 @@
   border-color: #c1c1c1;
 }
 
+/* Negative-cost levelbox image overlay. */
+.tile .levelBox.negative {
+  background-image: url("../images/negative_highlight.png");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.tile .levelBox.negative:hover {
+  background-image: url("../images/negative_active.png");
+}
+.tile .levelBox.negative:active {
+  background-image: url("../images/negative_depress.png");
+}
+.tile .levelBox.activated.negative {
+  background-image: url("../images/negative.png");
+}
+
 /* Styling for a locked levelbox. */
 .tile .levelBox.locked {
   background-image: url("../images/locked_unlock.png");
@@ -116,18 +132,36 @@
   border-color: #c1c1c1;
 }
 
-/* Unlocked levelbox image overlay. */
-.tile .levelBox.unlocked {
-  background-image: url("../images/locked_relock.png");
+/* Free levelbox image overlay. */
+.tile .levelBox.free {
+  background-image: url("../images/free_highlight.png");
   background-repeat: no-repeat;
   background-position: center;
 }
-
-/* Free levelbox image overlay. */
-.tile .levelBox.free {
+.tile .levelBox.free:hover {
+  background-image: url("../images/free_active.png");
+}
+.tile .levelBox.free:active {
+  background-image: url("../images/free_depress.png");
+}
+.tile .levelBox.activated.free {
   background-image: url("../images/free.png");
+}
+
+/* Unlocked levelbox image overlay. */
+.tile .levelBox.unlocked {
+  background-image: url("../images/locked_relock_highlight.png");
   background-repeat: no-repeat;
   background-position: center;
+}
+.tile .levelBox.unlocked:hover {
+  background-image: url("../images/locked_relock_active.png");
+}
+.tile .levelBox.unlocked:active {
+  background-image: url("../images/locked_relock_depress.png");
+}
+.tile .levelBox.activated.unlocked {
+  background-image: url("../images/locked_relock.png");
 }
 
 /* Perma-locked levelbox image overlay; note that we never use this. */
@@ -201,7 +235,8 @@
 }
 
 /* Hover behavior for levelbox borders. */
-.clickable.levelBox:hover {
+.clickable.levelBox:hover,
+.clickable.levelBox:active {
   border-width: 3px;
   width: 16px;
   height: 16px;
@@ -210,7 +245,8 @@
 /* Hover behavior and image overlay for locked levelboxes.
    The border styling here is basically just canceling the 
    border-thickening that levelboxes experience by default. */
-.tile .levelBox.locked.clickable:hover {
+.tile .levelBox.locked.clickable:hover,
+.tile .levelBox.locked.clickable:active {
   border-width: 2px;
   width: 18px;
   height: 18px;
@@ -218,7 +254,8 @@
 }
 
 /* Colors on a locked levelbox being hovered over. */
-.tile .levelBox.locked.clickable:hover, .tile .levelBox.locked.clickable:active {
+.tile .levelBox.locked.clickable:hover,
+.tile .levelBox.locked.clickable:active {
   border-color: #c1c1c1;
 }
 
@@ -233,7 +270,8 @@
 }
 
 /* Border thickness for hovering over a filled levelbox. */
-.tile .levelBox.activated.clickable:hover {
+.tile .levelBox.activated.clickable:hover,
+.tile .levelBox.activated.clickable:active {
   border-width: 3px;
   width: 16px;
   height: 16px;

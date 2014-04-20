@@ -196,7 +196,7 @@ Meteor.methods({
 
 // Check if the user's logged in as admin.
 var isAdmin = function() {
-  return Meteor.call('isUserLoggedInAsAdmin');
+  return MyAdmins.isUserLoggedInAsAdmin();
 }
 
 // Match functions.

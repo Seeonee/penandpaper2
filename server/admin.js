@@ -4,10 +4,17 @@ var admins = [
   'kevin@email.com'
 ];
 
-Meteor.methods({
-  // Function for testing if a user is logged in as admin.
-  isUserLoggedInAsAdmin: function() {
-    return Meteor.user() && _.contains(admins, Meteor.user().emails[0].address);
+MyAdmins = {
+  isUserLoggedInAsAdmin: function(user) {
+    console.log('isUserLoggedInAsAdmin starting');
+    if (!user) {
+      user = Meteor.user();
+      if (user) {
+        user = user.emails[0].address;
+      }
+    }
+    console.log('isUserLoggedInAsAdmin returning');
+    return user && _.contains(admins, user);
   }
-});
+};
 

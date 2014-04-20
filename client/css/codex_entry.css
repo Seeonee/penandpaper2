@@ -63,7 +63,10 @@
   background-repeat: no-repeat;
 }
 .document .button:hover {
-  border-color: #c8012e;
+  border-color: #107195;
+}
+.document .button:active {
+  border-color: #075c7b;
 }
 
 /* Styling for the document editing buttons. */
@@ -74,6 +77,9 @@
 .document .button.save:hover {
   background-image: url('../images/save_active.png');
 }
+.document .button.save:active {
+  background-image: url('../images/save_depress.png');
+}
 .document .button.copy {
   top: 34px;
   background-image: url('../images/copy.png');
@@ -81,11 +87,17 @@
 .document .button.copy:hover {
   background-image: url('../images/copy_active.png');
 }
+.document .button.copy:active {
+  background-image: url('../images/copy_depress.png');
+}
 .document .button.delete {
   top: 58px;
   background-image: url('../images/delete.png');
 }
 .document .button.delete:hover {
   background-image: url('../images/delete_active.png');
+}
+.document .button.delete:active {
+  background-image: url('../images/delete_depress.png');
 }
 

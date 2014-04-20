@@ -80,9 +80,14 @@ Template.skilltree_tile.levelboxes = function() {
   for (var i = 1; i <= num_slots; i++) {
     // If we got here, current can't be null.
     var attributes = [];
+    var tooltips = [];
     // Some skills are freebies.
-    if (current.cost == 0 && current.lock == 0 && !current.learned_by_default) {
+    if (current.lock == 0 && !current.learned_by_default && current.cost == 0) {
       attributes.push('free');
+      tooltips.push('This slot is free to fill in.');
+    } else if (current.cost < 0) {
+      attributes.push('negative');
+      tooltips.push('This slot provides skill points when filled in.');
     }
     if (current.filled == 1) {
       // This slot's been learned.
@@ -97,6 +102,7 @@ Template.skilltree_tile.levelboxes = function() {
         // Unless! The slot may need to be unequipped first.
         if (slot.equipped == null) {
           attributes.push('clickable');
+          tooltips.push('Ctrl + click to clear this slot.');
         }
       }
     } else {
@@ -119,6 +125,7 @@ Template.skilltree_tile.levelboxes = function() {
               if (previous == null || previous.lock == 0 || previous.unlocked == 1) {
                 // It can be unlocked! Make it clickable.
                 attributes.push('clickable');
+                tooltips.push('Click to unlock this slot.');
               }
             }
           } else {
@@ -127,6 +134,15 @@ Template.skilltree_tile.levelboxes = function() {
             if (current.filled == 0 && (previous == null || previous.unlocked == 0)) {
               // It can be re-locked.
               attributes.push('clickable');
+              // But first, can it be filled?
+              var cost = current.cost;
+              if ((skillPointsRemaining - cost) >= 0) {
+                if (previous == null || previous.filled > 0 || previous.learned_by_default) {
+                  // Affordable and prereq'd!
+                  tooltips.push('Click to fill in this slot.');
+                }
+              }
+              tooltips.push('Ctrl + click to re-lock this slot.');
             }
           }
         } else {
@@ -137,6 +153,7 @@ Template.skilltree_tile.levelboxes = function() {
             if (previous == null || previous.filled > 0 || previous.learned_by_default) {
               // And we've learned all the prerequisites!
               attributes.push('clickable');
+              tooltips.push('Click to fill in this slot.');
             }
           }
         }
@@ -147,7 +164,8 @@ Template.skilltree_tile.levelboxes = function() {
     next = (i < num_slots) ? slot[i + 2] : null;
     levelboxes.push({
       level: i - 1,
-      attributes: attributes.join(' ')
+      attributes: attributes.join(' '),
+      tooltip: tooltips.join('\n')
     });
   }
   return levelboxes;
