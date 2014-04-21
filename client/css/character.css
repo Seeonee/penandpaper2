@@ -11,62 +11,31 @@
 
 /* Character navlet; links between summary and edit sections,
    but also shows a quick-view of important details while editing. */
-.character .char_nav_shell {
-  position: fixed;
-  top: 80px;
-  z-index: 1;
-}
-
-.character .char_nav {
-  position: absolute;
-  right: 0px;
-  border: 1px solid black;
-  padding: 7px;
-  background-color: #fff;
-  opacity: 0.9;
-  cursor: default;
-}
-
-.character .char_nav .summary {
+.character .floating_nav .summary {
   float: right;
 }
 
-.character .char_nav .points {
+.character .floating_nav .points {
   font-family: Scada;
   float: right;
   clear: both;
 }
 
-.character .char_nav .tag {
+.character .floating_nav .tag {
   float: left;
   font-weight: normal;
 }
 
-.character .char_nav .value {
+.character .floating_nav .value {
   float: left;
   text-align: right;
   width: 20px;
 }
 
-.character .char_nav_shell .divider {
+.character .floating_nav_shell .divider {
   clear: both;
   border-bottom: 2px solid #e1e1e1;
   margin-bottom: 2px;
-}
-
-.character .char_nav_shell a {
-  font-size: 12px;
-  font-family: Verdana;
-  font-weight: bold;
-  text-decoration: none;
-  color: #c8012e;
-  padding: 2px;
-}
-.character .char_nav_shell a:hover {
-  color: #107195;
-}
-.character .char_nav_shell a:active {
-  color: #075c7b;
 }
 
 /* Attribute panel. */

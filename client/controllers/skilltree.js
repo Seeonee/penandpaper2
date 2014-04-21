@@ -15,8 +15,8 @@ Template.skilltree_tile.clickable = function() {
     clickable = true;
   } else {
     // Is at least one level unlocked?
-    _.each(slot, function(value) {
-      if (value.filled > 0) {
+    _.each(slot, function(value, key) {
+      if (key !== 'equipped' && value.filled > 0) {
         clickable = true;
       }
     });
@@ -28,6 +28,17 @@ Template.skilltree_tile.clickable = function() {
 // I.e. is anything equipped to it?
 Template.skilltree_tile.activated = function() {
   return (this.slot.equipped) ? 'activated' : '';
+}
+
+// Get the helpful tooltip for this tile.
+Template.skilltree_tile.tile_tooltip = function() {
+  if (this.slot.equipped) {
+    return 'Ctrl + click to unequip this slot.';
+  }
+  if (CharacterSupport.get_slot_level_inner(this.slot) > 0) {
+    return 'Click to equip this slot.';
+  }
+  return '';
 }
 
 // Some slots have more than one instance.
@@ -56,7 +67,7 @@ Template.skilltree_tile.equipped_name = function() {
 // Get the list of level boxes.
 Template.skilltree_tile.levelboxes = function() {
   var slot = this.slot;
-  var num_slots = _.size(slot);
+  var num_slots = _.size(slot) - 1; // Account for the "equipped" entry.
   if ('slot_id' in slot) {
     --num_slots;
   }
@@ -68,6 +79,7 @@ Template.skilltree_tile.levelboxes = function() {
   if (char_name) {
     var character = Characters.findOne({name: char_name});
     if (character) {
+      character = CharacterSupport.withBonuses(character);
       skillPointsRemaining = character.points.skill_points - character.points_spent.skill_points;
       keyPointsRemaining = character.points.key_points - character.points_spent.key_points;
     }
@@ -197,6 +209,63 @@ Template.skilltree_tile.events({
         console.log(err);
       }
     });
+  },
+  'click .tile.clickable': function(evt, template) {
+    // Weed out clicks on our child elements.
+    if ($(evt.target).hasClass('levelBox')) {
+      return;
+    }
+    
+    // Okay, now go.
+    var target = $(evt.currentTarget);
+    var equipped_name = target.find('.equipped-name').text().trim();
+    var clear = evt.ctrlKey;
+
+    var classes = target.attr('class').replace(' upgrade', '_upgrade').split(/\s+/);
+    var slots = _.map(SlotsUtils.all(), function(v, k) {
+      return k.replace(/ /g, '_');
+    });
+    var slot_name = _.intersection(classes, slots);
+    var slot_id = null;
+    if (slot_name.length == 1) {
+      slot_name = slot_name[0];
+      if ('instance' in target.data()) {
+        slot_id = target.data().instance;
+      }
+    } else {
+      // Can't continue without it.
+      return;
+    }
+
+    if (!clear) {
+      // Let's (re?)equip this sucker!
+      var route = Router.current().route.name; // Here's where we are now.
+      var params = Router.current().params;
+      params.slot_name = slot_name;
+      if (slot_id != null) {
+        params.slot_id = slot_id;
+      }
+      Router.go(route + '_edit_slot', params);
+    } else if (equipped_name.length > 0 && clear) {
+      if (Session.get('editing_character')) {
+        var name = Session.get('selected_character');
+        if (name) {
+          var options = {
+            character_name: name,
+            slot_name: slot_name
+          };
+          slot_id = parseInt(slot_id);
+          if (slot_id) {
+            options.slot_id = slot_id;
+          }
+          Meteor.call('characterUnequipSlot', options, function(err, result) {
+            if (err) {
+              console.log(err); // TODO: !!!
+            }
+          });
+        }
+      }
+    }
   }
 });
 

@@ -224,6 +224,115 @@ GenericCharacters.characterSetDeity = function(name, deity, dbWrapper) {
   dbWrapper.db.update({_id: character._id}, {$set: new_set});
 }
 
+// Attempt to equip a slot.
+// This always assumes the currently logged-in user is the culprit.
+GenericCharacters.characterEquipSlot = function(
+    character_name, 
+    slot_name, 
+    slot_id, 
+    skill_id,
+    dbWrapper) {
+  // Check character.
+  var character = dbWrapper.characterExists(character_name);
+  if (!character) {
+    throw new Meteor.Error(403, "Character does not exist");
+  }
+  var user = Meteor.user().emails[0].address;
+  if (user !== character.owner) {
+    throw new Meteor.Error(403, "You don't have permission to edit that character");
+  }
+  
+  // Make sure the skill exists.
+  var skill = Codex.findOne({_id: skill_id});
+  if (!skill) {
+    throw new Meteor.Error(403, "Skill does not exist");
+  }
+  
+  // Get the slot being modified.
+  var edited_slots = _.filter(character.slots, function(v, k) {
+    return (k === slot_name);
+  });
+  if (edited_slots.length > 0) {
+    edited_slots = edited_slots[0];
+  } else {
+    throw new Meteor.Error(403, "Slot does not exist");
+  }
+  if (slot_id) {
+    slot_id = slot_id - 1; // Switch to zero-based index.
+    if (slot_id >= edited_slots.length) {
+      throw new Meteor.Error(403, "Slot does not exist");
+    }
+  }
+  
+  // This makes some function calls more convenient.
+  var slot = {
+    name: slot_name,
+    id: slot_id + 1
+  };
+  // Can we equip this skill here?
+  var slot_level = CharacterSupport.get_slot_level(character, slot);
+  if (skill.level > slot_level) {
+    throw new Meteor.Error(403, "Skill level is too high");
+  }
+  if (!_.contains(skill.slots, slot_name)) {
+    throw new Meteor.Error(403, "Skill cannot be equipped in this slot");
+  }
+  
+  // Cool! Looks good.
+  var new_set = {};
+  new_set[create_key(slot_name, slot_id) + '.equipped'] = skill_id;
+  new_set['last_modified_on'] = Date.now();
+  dbWrapper.db.update({_id: character._id}, {$set: new_set});
+}
+
+// Attempt to unequip a slot.
+// This always assumes the currently logged-in user is the culprit.
+GenericCharacters.characterUnequipSlot = function(
+    character_name, 
+    slot_name, 
+    slot_id, 
+    dbWrapper) {
+  // Check character.
+  var character = dbWrapper.characterExists(character_name);
+  if (!character) {
+    throw new Meteor.Error(403, "Character does not exist");
+  }
+  var user = Meteor.user().emails[0].address;
+  if (user !== character.owner) {
+    throw new Meteor.Error(403, "You don't have permission to edit that character");
+  }
+  
+  // Get the slot being modified.
+  var edited_slots = _.filter(character.slots, function(v, k) {
+    return (k === slot_name);
+  });
+  if (edited_slots.length > 0) {
+    edited_slots = edited_slots[0];
+  } else {
+    throw new Meteor.Error(403, "Slot does not exist");
+  }
+  if (slot_id) {
+    slot_id = slot_id - 1; // Switch to zero-based index.
+    if (slot_id >= edited_slots.length) {
+      throw new Meteor.Error(403, "Slot does not exist");
+    }
+  }
+
+  // Figure out which skill is actually equipped.
+  var skill_id = character.slots[slot_name];
+  if (slot_id != null) {
+    skill_id = skill_id[slot_id];
+  }
+  skill_id = skill_id.equipped;
+  var skill = Codex.findOne({_id: skill_id});
+  
+  // Cool! Looks good.
+  var new_set = {};
+  new_set[create_key(slot_name, slot_id) + '.equipped'] = null;
+  new_set['last_modified_on'] = Date.now();
+  dbWrapper.db.update({_id: character._id}, {$set: new_set});
+}
+
 // Attempt to fire a levelbox click for a character name.
 // This always assumes the currently logged-in user is the culprit.
 GenericCharacters.characterLevelbox = function(
@@ -238,6 +347,7 @@ GenericCharacters.characterLevelbox = function(
   if (!character) {
     throw new Meteor.Error(403, "Character does not exist");
   }
+  character = CharacterSupport.withBonuses(character);
   var user = Meteor.user().emails[0].address;
   if (user !== character.owner) {
     throw new Meteor.Error(403, "You don't have permission to edit that character");
@@ -425,13 +535,15 @@ var character_do_relock = function(character, slot_name, slot_id, slot_level, db
   dbWrapper.db.update({ _id: character._id}, { $set: new_set});
 }
 
-// Create a $set key for a particular slot's levelbox.
+// Create a $set key for a particular slot or its levelbox.
 var create_key = function(slot_name, slot_id, slot_level) {
   var key = 'slots.' + slot_name;
   if (slot_id != null) {
     key += '.' + slot_id;
   }
-  key += '.' + slot_level;
+  if (slot_level != null) {
+    key += '.' + slot_level;
+  }
   return key;
 }
 

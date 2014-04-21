@@ -34,6 +34,35 @@ _.forEach(SkillChecks.all(), function(skill) {
   };
 });
 
+// This tests if an array of bonus strings, 
+// e.g. ['+1 devotions.any', '+2 devotions.death'],
+// creates valid keys off of the defaults map.
+CharacterDefaults.bonusesExist = function(bonuses) {
+  var formatted_bonuses = {};
+  _.each(bonuses, function(v) {
+    var pieces = v.split(/\s+/);
+    if (pieces.length == 2) {
+      formatted_bonuses[pieces[1].trim()] = parseInt(pieces[0]);
+    }
+  });
+  var all_exist = true;
+  _.each(formatted_bonuses, function(value, name) {
+    try {
+      var pieces = name.split(/\./g);
+      var obj = CharacterDefaults;
+      _.each(pieces, function(value) {
+        obj = obj[value];
+      });
+      if (obj != parseInt(obj)) {
+        all_exist = false;
+      }
+    } catch (err) {
+      all_exist = false;
+    }
+  });
+  return all_exist;
+}
+
 // The BIG one! This lays out the default slots
 // that a character can equip, as well as their costs,
 // max levels, etc.
@@ -46,6 +75,7 @@ CharacterDefaults.createEmptySlots = function() {
   // Character-definers first.
   // Heritage.
   slots.heritage = {
+    equipped: null,
     1: {
       cost: 0,
       filled: 0,
@@ -55,6 +85,7 @@ CharacterDefaults.createEmptySlots = function() {
   };
   // Calling.
   slots.calling = {
+    equipped: null,
     1: {
       cost: 0,
       filled: 0,
@@ -68,6 +99,7 @@ CharacterDefaults.createEmptySlots = function() {
   slots.one_handed_weapon = [
     {
       // First one-handed weapon.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -88,6 +120,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Second one-handed weapon.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -113,6 +146,7 @@ CharacterDefaults.createEmptySlots = function() {
   slots.one_handed_weapon_upgrade = [
     {
       // First one-handed weapon upgrade.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -127,6 +161,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Second one-handed weapon upgrade.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -144,6 +179,7 @@ CharacterDefaults.createEmptySlots = function() {
   
   // Two-handed weapon.
   slots.two_handed_weapon = {
+    equipped: null,
     1: {
       cost: 0,
       filled: 0,
@@ -167,6 +203,7 @@ CharacterDefaults.createEmptySlots = function() {
   
   // Two-handed weapon upgrade.
   slots.two_handed_weapon_upgrade = {
+    equipped: null,
     1: {
       cost: 1,
       filled: 0,
@@ -183,6 +220,7 @@ CharacterDefaults.createEmptySlots = function() {
   
   // Two-handed ranged weapon.
   slots.two_handed_ranged_weapon = {
+    equipped: null,
     1: {
       cost: 1,
       filled: 0,
@@ -199,6 +237,7 @@ CharacterDefaults.createEmptySlots = function() {
   
   // Two-handed ranged weapon upgrade.
   slots.two_handed_ranged_weapon_upgrade = {
+    equipped: null,
     1: {
       cost: 1,
       filled: 0,
@@ -217,6 +256,7 @@ CharacterDefaults.createEmptySlots = function() {
   slots.one_handed_shield = [
     {
       // First shield.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -231,6 +271,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Second shield.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -250,6 +291,7 @@ CharacterDefaults.createEmptySlots = function() {
   slots.one_handed_shield_upgrade = [
     {
       // First shield upgrade.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -264,6 +306,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Second shield upgrade.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -281,6 +324,7 @@ CharacterDefaults.createEmptySlots = function() {
   
   // Armor.
   slots.armor = {
+    equipped: null,
     1: {
       cost: 1,
       filled: 0,
@@ -305,6 +349,7 @@ CharacterDefaults.createEmptySlots = function() {
   slots.armor_upgrade = [
     {
       // First armor upgrade.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -319,6 +364,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Second armor upgrade.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -338,6 +384,7 @@ CharacterDefaults.createEmptySlots = function() {
   slots.gift = [
     {
       // First gift.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -352,6 +399,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Second gift.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -366,6 +414,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Third gift.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -380,6 +429,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Fourth gift.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -399,6 +449,7 @@ CharacterDefaults.createEmptySlots = function() {
   slots.curse = [
     {
       // First curse.
+      equipped: null,
       1: {
         cost: -1,
         filled: 0,
@@ -407,6 +458,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Second curse.
+      equipped: null,
       1: {
         cost: -1,
         filled: 0,
@@ -420,6 +472,7 @@ CharacterDefaults.createEmptySlots = function() {
   slots.ability = [
     {
       // First ability.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -440,6 +493,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Second ability.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -460,6 +514,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Third ability.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -480,6 +535,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Fourth ability.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -505,6 +561,7 @@ CharacterDefaults.createEmptySlots = function() {
   slots.ability_upgrade = [
     {
       // First ability upgrade.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -519,6 +576,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Second ability upgrade.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -533,6 +591,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Third ability upgrade.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,
@@ -547,6 +606,7 @@ CharacterDefaults.createEmptySlots = function() {
       }
     }, {
       // Fourth ability upgrade.
+      equipped: null,
       1: {
         cost: 1,
         filled: 0,

@@ -1,0 +1,33 @@
+/* Character navlet; links between summary and edit sections,
+   but also shows a quick-view of important details while editing. */
+.floating_nav_shell {
+  position: fixed;
+  top: 80px;
+  z-index: 1;
+}
+
+.floating_nav {
+  position: absolute;
+  right: 0px;
+  border: 1px solid black;
+  padding: 7px;
+  background-color: #fff;
+  opacity: 0.9;
+  cursor: default;
+}
+
+.floating_nav_shell a {
+  font-size: 12px;
+  font-family: Verdana;
+  font-weight: bold;
+  text-decoration: none;
+  color: #c8012e;
+  padding: 2px;
+}
+.floating_nav_shell a:hover {
+  color: #107195;
+}
+.floating_nav_shell a:active {
+  color: #075c7b;
+}
+

@@ -42,7 +42,8 @@ Meteor.methods({
       level: IntegerAsString,
       slots: ListOfValidSlots,
       types: ListOfNonEmptyStrings,
-      text: NonEmptyString
+      text: NonEmptyString,
+      bonuses: ListOfNonEmptyStrings
     });
 
     // Check name.
@@ -79,6 +80,14 @@ Meteor.methods({
       throw new Meteor.Error(413, "Text too long");
     }
     
+    // Check bonuses.
+    options.bonuses = _.map(options.bonuses.trim().split(','), function(value) {
+      return value.trim();
+    });
+    if (!CharacterDefaults.bonusesExist(options.bonuses)) {
+      throw new Meteor.Error(413, "Invalid bonus(es)");
+    }
+    
     // Put it in!
     var id = Random.id();
     Codex.insert({
@@ -88,7 +97,7 @@ Meteor.methods({
       slots: options.slots,
       types: options.types,
       text: options.text,
-      bonuses: [],
+      bonuses: options.bonuses,
       created_by: Meteor.user().emails[0].address,
       created: Date.now(),
       last_modified_on: Date.now()
@@ -140,7 +149,8 @@ Meteor.methods({
       level: IntegerAsString,
       slots: ListOfValidSlots,
       types: ListOfNonEmptyStrings,
-      text: NonEmptyString
+      text: NonEmptyString,
+      bonuses: ListOfNonEmptyStrings
     });
     
     // Check ID.
@@ -181,6 +191,14 @@ Meteor.methods({
       throw new Meteor.Error(413, "Text too long");
     }
 
+    // Check bonuses.
+    options.bonuses = _.map(options.bonuses.trim().split(','), function(value) {
+      return value.trim();
+    });
+    if (!CharacterDefaults.bonusesExist(options.bonuses)) {
+      throw new Meteor.Error(413, "Invalid bonus(es)");
+    }
+    
     // Update it!
     Codex.update({ _id: options._id}, { $set: {
       name: options.name,
@@ -188,7 +206,7 @@ Meteor.methods({
       slots: options.slots,
       types: options.types,
       text: options.text,
-      bonuses: [],
+      bonuses: options.bonuses,
       updated_by: Meteor.user().emails[0].address,
       last_modified_on: Date.now()
     }});
@@ -207,6 +225,7 @@ var NonEmptyString = Match.Where(function(x) {
   return x.trim().length !== 0;
 });
 
+// Match functions.
 // Match a comma-separated list of nonempty strings.
 var ListOfNonEmptyStrings = Match.Where(function(x) {
   check(x, String);
@@ -222,12 +241,14 @@ var ListOfNonEmptyStrings = Match.Where(function(x) {
 var ListOfValidSlots = Match.Where(function (x) {
   check(x, String);
   var slots = SlotsUtils.all();
+  var all_valid = true;
   _.each(x.split(','), function(element) {
-    if (!(_.contains(slots, element.trim()))) {
-      return false;
+    var s = element.trim().toLowerCase();
+    if (!(s in slots)) {
+      all_valid = false;
     }
   });
-  return true;
+  return all_valid;
 });
 
 // Match a string which can be int'd.

@@ -23,7 +23,9 @@ var initialize_filters = function() {
   );
   
   // This one's special.
-  var choices = SlotsUtils.all();
+  var choices = _.map(SlotsUtils.all(), function(v, k) {
+    return k;
+  });
   choices.unshift('');
   CodexFilters.add_multiple_choice_filter(
     'slots', 
@@ -80,13 +82,16 @@ var performSearch = function() {
       }
     }
   });
-  
-  // TODO: If a character is selected and
-  // skills are being search as part of equipping
-  // one of that character's slots, the base path
-  // should be something more like:
-  // "/characters/<name>/<slot_name>/<#>/<url...>"
-  Router.go('/codex' + url);
+
+  var route = Router.current().route.name; // Here's where we are now.
+  var params = Router.current().params;
+  if (url.length > 0) {
+    params.filters = url.slice(1);
+  } else {
+    params.filters = 'all';
+  }
+  // TODO: Fix colon being replaced with %3A?
+  Router.go(route, params);
 }
 
 // Handle search inputs.

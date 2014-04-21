@@ -223,6 +223,22 @@
 .tile.clickable:hover {
   border-color: #c8012e;
 }
+.tile.clickable:hover {
+  border-color: #107195;
+}
+.tile.clickable:active {
+  border-color: #075c7b;
+}
+.tile.clickable:hover .equipped-name {
+  color: #107195;
+}
+.tile.clickable:active .equipped-name {
+  border-color: #075c7b;
+}
+
+.clickable {
+  cursor: pointer;
+}
 
 /* Colors for a levelbox that can be clicked and is being hovered over. */
 .tile .levelBox.clickable:hover {
@@ -262,11 +278,6 @@
 /* Image overlay for locked levelbox being depressed. */
 .tile .levelBox.locked.clickable:active {
   background-image: url("../images/locked_unlock_depress.png");
-}
-
-/* Colors on the background of an equipped tile being hovered over. */
-.tile.activated:hover {
-  background-color: #e1e1e1;
 }
 
 /* Border thickness for hovering over a filled levelbox. */

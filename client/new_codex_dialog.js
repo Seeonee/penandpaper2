@@ -38,7 +38,8 @@ Template.new_codex_dialog.events({
       level: template.find("input[name*=new_codex_level]").value,
       slots: template.find("input[name*=new_codex_slots]").value,
       types: template.find("input[name*=new_codex_types]").value,
-      text: template.find("textarea[name*=new_codex_text]").value
+      text: template.find("textarea[name*=new_codex_text]").value,
+      bonuses: template.find("input[name*=new_codex_bonuses]").value
     };
     createCodice(options, newCodiceCallback);
   }

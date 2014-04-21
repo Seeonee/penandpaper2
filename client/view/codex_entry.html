@@ -1,5 +1,5 @@
 <template name="codex_entry">
-  <div class="document">
+  <div class="document {{equippable}}">
     <div class="icon activated background {{first_slot}}">
       <div class="name" contenteditable="{{can_edit}}">
         {{name_uppercase}}
@@ -22,6 +22,12 @@
         <div class="tag">TEXT:</div>
         <div class="value" contenteditable="{{can_edit}}">{{{text_with_breaks}}}</div>
       </div>
+      {{#if can_edit}}
+        <div class="bonuses">
+          <div class="tag">BONUS:</div>
+          <div class="value" contenteditable="{{can_edit}}">{{bonuses_list}}</div>
+        </div>
+      {{/if}}
     </div>
     {{#if can_edit}}
       <div class="button save"></div>

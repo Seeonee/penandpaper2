@@ -6,4 +6,6 @@ Make it possible to clear levelboxes as long as the equipped skill is a lower le
 Add a way to create new characters from the home view.
 Add a way to delete characters from the home view.
 Add a way to admin-delete characters from the characters page.
-
+Clean up all the client/server/lib common code lying around. Take server-side code that would also be useful to the client and move it into lib.
+Add tooltips to skilltree tiles.
+Consider getting rid of the grey highlight when hovering on equipped skilltree tiles.

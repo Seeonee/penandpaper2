@@ -19,14 +19,14 @@
       {{/with}}
     {{else}}
       <h1>Sorry...</h1>
-      <p>That character doesn't exist yet.</p>
+      <h2>That character doesn't exist yet.</h2>
     {{/if}}
   </div>
 </template>
 
 <template name="character_nav">
-  <div class="char_nav_shell column">
-    <div class="char_nav">
+  <div class="floating_nav_shell column">
+    <div class="floating_nav">
       {{#if editing}}
         <div class="points skill_points">
           <div class="tag">Skill points:</div>

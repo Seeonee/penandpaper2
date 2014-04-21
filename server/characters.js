@@ -128,6 +128,48 @@ Meteor.methods({
       options.character_name.trim(), 
       options.deity.trim(),
       GenericCharacters.Characters);
+  },
+  
+  // ------------------------------------------------------------------ //
+  // Options is a map of: character name, slot name, slot ID, skill ID.
+  characterEquipSlot: function(options) {
+    // Check permissions.
+    if (!this.userId) {
+      throw new Meteor.Error(403, "You must be logged in");
+    }
+    check(options, {
+      character_name: NonEmptyString,
+      slot_name: NonEmptyString,
+      slot_id: Match.Optional(Match.Integer),
+      skill_id: NonEmptyString,
+    });
+    
+    GenericCharacters.characterEquipSlot(
+      options.character_name.trim(), 
+      options.slot_name.trim(),
+      options.slot_id,
+      options.skill_id,
+      GenericCharacters.Characters);
+  },
+  
+  // ------------------------------------------------------------------ //
+  // Options is a map of: character name, slot name, slot ID.
+  characterUnequipSlot: function(options) {
+    // Check permissions.
+    if (!this.userId) {
+      throw new Meteor.Error(403, "You must be logged in");
+    }
+    check(options, {
+      character_name: NonEmptyString,
+      slot_name: NonEmptyString,
+      slot_id: Match.Optional(Match.Integer),
+    });
+    
+    GenericCharacters.characterUnequipSlot(
+      options.character_name.trim(), 
+      options.slot_name.trim(),
+      options.slot_id,
+      GenericCharacters.Characters);
   }
 });
 

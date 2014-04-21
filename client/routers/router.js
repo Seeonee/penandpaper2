@@ -35,7 +35,10 @@ Router.map(function() {
   // Page showing a single character by name.
   this.route('character', {
     path: 'characters/:name?/:edit?',
-    waitOn: charactersReady,
+    onBeforeAction: function() {
+      this.subscribe('characters').wait();
+      this.subscribe('codex').wait();
+    },
     onRun: function() {
       var c = null;
       if (this.params.name) {
@@ -62,11 +65,61 @@ Router.map(function() {
     }
   });
   
+  // Page showing a single character by name.
+  this.route('character_edit_slot', {
+    path: 'characters/:name/e/:slot_name/:slot_id?/:filters(*)?',
+    // waitOn: charactersReady, // TODO: Needs characters too!
+    onBeforeAction: function() {
+      this.subscribe('characters').wait();
+      this.subscribe('codex').wait();
+    },
+    onRun: function() {
+      var c = null;
+      if (this.params.name) {
+        c = Characters.findOne({name: {
+          $regex: RegExp.quote(this.params.name),
+          $options: 'i'
+        }});
+      }
+      if (!c) {
+        // That's all for now.
+        Session.set('selected_character', null);
+        return;
+      }
+      Session.set('selected_character', c.name);
+      Session.set('editing_character', true);
+      var slot = {name: this.params.slot_name, id: this.params.slot_id };
+      if (SlotsUtils.isValidSlot(slot)) {
+        var f = {};
+        if (this.params.filters) {
+          if (this.params.filters !== 'all') {
+            f = CodexFilters.decode_url_filter_terms(this.params.filters);
+          }
+        }
+        var level = CharacterSupport.get_slot_level(c, slot);
+        f = CodexFilters.narrow_filters(f, slot.name, level);
+        Session.set('selected_filters', f);
+        Session.set('editing_slot', slot);
+      } else {
+        Session.set('editing_slot', null);
+      }
+    },
+    action: function() {
+      if (this.ready()) {
+        this.render();
+      } else {
+        this.render('loading');
+      }
+    }
+  });
+  
   // Page showing all skills (or codices, if you like).
   this.route('codex', {
     waitOn: codexReady,
     action: function() {
       if (this.ready()) {
+        Session.set('selected_character', null);
+        Session.set('editing_slot', null);
         Session.set('selected_filters', null);
         this.render();
       } else {
@@ -102,9 +155,15 @@ Router.map(function() {
     path: 'codex/:filters(*)?',
     waitOn: codexReady,
     onRun: function() {
+      Session.set('selected_character', null);
+      Session.set('editing_slot', null);
       if (this.params.filters) {
-        var f = CodexFilters.decode_url_filter_terms(this.params.filters);
-        Session.set('selected_filters', f);
+        if (this.params.filters === 'all') {
+          Session.set('selected_filters', null);
+        } else {
+          var f = CodexFilters.decode_url_filter_terms(this.params.filters);
+          Session.set('selected_filters', f);
+        }
       }
     },
     action: function() {

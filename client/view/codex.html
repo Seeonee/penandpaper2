@@ -1,16 +1,41 @@
 <template name="codex">
   <div class="container column">
-    <h1>Codex</h1>
-    {{> codex_filters}}
-    {{#each codex}}
-      {{> codex_entry}}
-    {{/each}}
+    {{#with character_being_edited}}
+      {{#if editing}}
+          <h1>{{slot_pretty}}</h1>
+          <h2>{{level_pretty}}</h2>
+          {{> codex_nav}}
+      {{else}}
+        <h1>Codex</h1>
+        {{#if can_edit}}
+          {{> add_codex_nav}}
+        {{/if}}
+      {{/if}}
+      {{> codex_filters}}
+      {{#each codex}}
+        {{> codex_entry}}
+      {{/each}}
+    {{/with}}
     {{> new_codex_dialog}}
   </div>
-  {{#if can_edit}}
-    <div class="add column">
-      <div class="add_more">Add...</div>
-    </div>
-  {{/if}}
 </template>
 
+<template name="codex_nav">
+  <div class="floating_nav_shell column">
+    <div class="floating_nav">
+      <a href="{{pathFor 'character' name=this.name edit='edit'}}" class="edit">« {{name_pretty}}</a>
+    </div>
+  </div>
+</template>
+
+<template name="add_codex_nav">
+  <div class="floating_nav_shell column">
+    <div class="floating_nav">
+      <a href="#" class="add_more">New entry</a>
+    </div>
+  </div>
+</template>
+
+<template name="character_edit_slot">
+  {{> codex}}
+</template>

@@ -124,6 +124,27 @@ FilterSet.decode_url_filter_terms = function(url) {
   return params;
 }
 
+// Take a map of filters and add/adjust certain keys
+// to reflect a slot's valid choices.
+FilterSet.narrow_filters = function(filters, slot, level) {
+  var new_filters = _.extend({}, filters);
+  new_filters.slots = [slot];
+  // If the user has chosen a lower level, allow it.
+  var chosen_level = new_filters.level;
+  if (chosen_level != null) {
+    if (chosen_level.length > 0) {
+      chosen_level = parseInt(chosen_level[0]);
+    } else {
+      chosen_level = null;
+    }
+  }
+  var possible_levels = _.range(1, level + 1);
+  if (!_.contains(possible_levels, chosen_level)) {
+    new_filters.level = [level]; // Can we show lower-leveled options simultaneously?
+  }
+  return new_filters;
+}
+
 // Create nicely formatted URL additions.
 FilterSet.format_value_for_url = function(filter_name, text) {
   if (filter_name in this.all_filters) {

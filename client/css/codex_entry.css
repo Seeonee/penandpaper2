@@ -101,3 +101,21 @@
   background-image: url('../images/delete_depress.png');
 }
 
+/* When equipping slots, these come into play. */
+.document.clickable:hover {
+  border-color: #107195;
+  background-color: #107195;
+  color: #fff;
+}
+.document.clickable,
+.document.clickable .icon {
+  cursor: pointer;
+}
+.document.clickable:hover .name {
+  color: #fff;
+}
+.document.clickable:active {
+  border-color: #075c7b;
+  background-color: #075c7b;
+}
+

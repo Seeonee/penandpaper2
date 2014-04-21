@@ -1,19 +1,12 @@
 
 /* Link for creating new entries. */
-.add {
-  padding-bottom: 60px;
+h2 a {
+  text-decoration: none;
+  color: #c1c1c1;
 }
-.add_more {
-  width: 100%;
-  margin: 30px auto;
-  padding: 20px 0 20px 0;
-  cursor: pointer;
-  font-family: 'Verdana';
-  font-size: 24px;
-  text-align: center;
+h2 a:hover {
+  color: #107195;
 }
-.add_more:hover {
-  background-color: #e1e1e1;
-  color: #c8012e;
+h2 a:active {
+  color: #075c7b;
 }
-
