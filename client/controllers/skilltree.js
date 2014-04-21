@@ -110,6 +110,7 @@ Template.skilltree_tile.levelboxes = function() {
         attributes.push('default');
         // This slot can never be clicked, but
         // it still might be filled in.
+        tooltips.push('This slot is filled in automatically while its neighbor is filled in.');
         if (next != null && next.filled == 1) {
           attributes.push('activated')
         }
@@ -127,6 +128,8 @@ Template.skilltree_tile.levelboxes = function() {
                 attributes.push('clickable');
                 tooltips.push('Click to unlock this slot.');
               }
+            } else {
+              tooltips.push('You don\'t have enough key points to unlock this slot.');
             }
           } else {
             // It's been unlocked already.
@@ -141,6 +144,8 @@ Template.skilltree_tile.levelboxes = function() {
                   // Affordable and prereq'd!
                   tooltips.push('Click to fill in this slot.');
                 }
+              } else {
+                tooltips.push('You don\'t have enough skill points to fill in this slot.');
               }
               tooltips.push('Ctrl + click to re-lock this slot.');
             }
@@ -155,6 +160,8 @@ Template.skilltree_tile.levelboxes = function() {
               attributes.push('clickable');
               tooltips.push('Click to fill in this slot.');
             }
+          } else {
+            tooltips.push('You don\'t have enough skill points to fill in this slot.');
           }
         }
       }

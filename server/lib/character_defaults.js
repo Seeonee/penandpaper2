@@ -6,7 +6,7 @@ CharacterDefaults = {};
 // should never drop negative.
 CharacterDefaults.points = {
   skill_points: 8,
-  key_points: 3
+  key_points: 0
 };
 
 // Stats that are affected by various equipped slots.

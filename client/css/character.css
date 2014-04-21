@@ -126,6 +126,8 @@
   font-family: Verdana;
   font-weight: bold;
   text-align: center;
+  text-decoration: none;
+  color: #fff;
 }
 /* And the colors... */
 .character_section.controls .change_level {
@@ -133,7 +135,6 @@
   cursor: default;
 }
 .character_section.controls .change_level.available {
-  color: #fff;
   background-color: #c8012e;
   cursor: pointer;
 }

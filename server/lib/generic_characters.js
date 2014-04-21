@@ -23,10 +23,11 @@ GenericCharacters.publish_fields = {
 };
 
 // Wrap a database up with some convenience methods.
-var wrapper = function(db, entry_name, defaults, admin_only, limit_per_player) {
+var wrapper = function(db, entry_name, defaults, schema, admin_only, limit_per_player) {
   this.db = db;
   this.entry_name = entry_name;
   this.defaults = defaults;
+  this.schema = schema;
   this.admin_only = admin_only;
   if (limit_per_player) {
     this.limit_per_player = limit_per_player;
@@ -56,15 +57,23 @@ var wrapper = function(db, entry_name, defaults, admin_only, limit_per_player) {
       // Nope, that's our floor.
       return false;
     }
-    if (character.points_spent.skill_points == character.points.skill_points) {
-      return false;
+    // Do we have enough points to give up what we earned this level?
+    var remaining = {
+      skill_points: character.points.skill_points - character.points_spent.skill_points,
+      key_points: character.points.key_points - character.points_spent.key_points
     }
-    return true;
+    var sufficient = true;
+    _.each(this.schema[character.level], function(v, k) {
+      if (remaining[k] < v) {
+        sufficient = false;
+      }
+    });
+    return sufficient;
   }
   
   // See if a character can increase by 1 level.
   this.characterCanLevelUp = function(character) {
-    if (character.level >= 15) {
+    if (!((character.level + 1) in this.schema)) {
       // Nope, that's our ceiling.
       return false;
     }
@@ -156,6 +165,10 @@ GenericCharacters.characterLevelDown = function(name, dbWrapper) {
   }
   
   var new_set = {level: character.level - 1};
+  new_set['points.skill_points'] = 
+      character.points.skill_points - dbWrapper.schema[character.level].skill_points;
+  new_set['points.key_points'] = 
+      character.points.key_points - dbWrapper.schema[character.level].key_points;
   dbWrapper.db.update({_id: character._id}, {$set: new_set});
 }
 
@@ -176,6 +189,10 @@ GenericCharacters.characterLevelUp = function(name, dbWrapper) {
   }
   
   var new_set = {level: character.level + 1};
+  new_set['points.skill_points'] = 
+      character.points.skill_points + dbWrapper.schema[character.level + 1].skill_points;
+  new_set['points.key_points'] = 
+      character.points.key_points + dbWrapper.schema[character.level + 1].key_points;
   dbWrapper.db.update({_id: character._id}, {$set: new_set});
 }
 
@@ -414,6 +431,7 @@ GenericCharacters.Characters = new wrapper(
   Characters, 
   'character', 
   CharacterDefaults,
+  CharacterSchema,
   false, 
   10);
 

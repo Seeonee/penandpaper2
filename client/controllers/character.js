@@ -33,12 +33,25 @@ Template.character_nav.key_points_remaining = function() {
 
 // Can this character level up?
 Template.character_controls.can_level_up = function() {
-  return (this.level < 15) ? 'available' : '';
+  return ((this.level + 1) in CharacterSchema) ? 'available' : '';
 }
 
 // Can this character level up?
 Template.character_controls.can_level_down = function() {
-  return (this.level > 1 && this.points_spent.skill_points != this.points.skill_points) ? 'available' : '';
+  if (this.level <= 1) {
+    return false;
+  }
+  var remaining = {
+    skill_points: this.points.skill_points - this.points_spent.skill_points,
+    key_points: this.points.key_points - this.points_spent.key_points
+  }
+  var sufficient = true;
+  _.each(CharacterSchema[this.level], function(v, k) {
+    if (remaining[k] < v) {
+      sufficient = false;
+    }
+  });
+  return (sufficient) ? 'available' : '';
 }
 
 // Get the available deities.
