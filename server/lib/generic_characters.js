@@ -14,6 +14,7 @@ GenericCharacters.publish_fields = {
   attributes: 1,
   devotions: 1,
   skills: 1,
+  deity: 1,
   slots: 1,
   
   owner: 1, 
@@ -47,6 +48,27 @@ var wrapper = function(db, entry_name, defaults, admin_only, limit_per_player) {
   // See if a character name is already in use.
   this.characterExists = function(name) {
     return this.db.findOne({name: {$regex: RegExp.quote(name), $options: 'i'}});
+  }
+  
+  // See if a character can reduce by 1 level.
+  this.characterCanLevelDown = function(character) {
+    if (character.level <= 1) {
+      // Nope, that's our floor.
+      return false;
+    }
+    if (character.points_spent.skill_points == character.points.skill_points) {
+      return false;
+    }
+    return true;
+  }
+  
+  // See if a character can increase by 1 level.
+  this.characterCanLevelUp = function(character) {
+    if (character.level >= 15) {
+      // Nope, that's our ceiling.
+      return false;
+    }
+    return true;
   }
 }
 
@@ -92,6 +114,7 @@ GenericCharacters.createCharacter = function(name, owner, dbWrapper) {
     attributes: dbWrapper.defaults.attributes,
     devotions: dbWrapper.defaults.devotions,
     skills: dbWrapper.defaults.skills,
+    deity: null,
     slots: slots,
     
     date_created: Date.now(),
@@ -112,8 +135,68 @@ GenericCharacters.deleteCharacter = function(name, owner, dbWrapper) {
     throw new Meteor.Error(403, "You don't have permission to delete that character");
   }
   
-  db.remove({_id: character._id});
+  dbWrapper.db.remove({_id: character._id});
   return name;
+}
+
+// Attempt to reduce a character's level by 1.
+// This always assumes the currently logged-in user is the culprit.
+GenericCharacters.characterLevelDown = function(name, dbWrapper) {
+  var character = dbWrapper.characterExists(name);
+  if (!character) {
+    throw new Meteor.Error(403, "Can't change level of nonexistant character '" + name + "'");
+  }
+  var user = Meteor.user().emails[0].address;
+  if (user !== character.owner) {
+    throw new Meteor.Error(403, "You don't have permission to edit that character");
+  }
+
+  if (!dbWrapper.characterCanLevelDown(character)) {
+    throw new Meteor.Error(403, "That character can't currently lose any more levels");
+  }
+  
+  var new_set = {level: character.level - 1};
+  dbWrapper.db.update({_id: character._id}, {$set: new_set});
+}
+
+// Attempt to increase a character's level by 1.
+// This always assumes the currently logged-in user is the culprit.
+GenericCharacters.characterLevelUp = function(name, dbWrapper) {
+  var character = dbWrapper.characterExists(name);
+  if (!character) {
+    throw new Meteor.Error(403, "Can't change level of nonexistant character '" + name + "'");
+  }
+  var user = Meteor.user().emails[0].address;
+  if (user !== character.owner) {
+    throw new Meteor.Error(403, "You don't have permission to edit that character");
+  }
+
+  if (!dbWrapper.characterCanLevelUp(character)) {
+    throw new Meteor.Error(403, "That character can't gain any more levels");
+  }
+  
+  var new_set = {level: character.level + 1};
+  dbWrapper.db.update({_id: character._id}, {$set: new_set});
+}
+
+// Attempt to set a character's deity.
+// This always assumes the currently logged-in user is the culprit.
+GenericCharacters.characterSetDeity = function(name, deity, dbWrapper) {
+  var character = dbWrapper.characterExists(name);
+  if (!character) {
+    throw new Meteor.Error(403, "Can't set deity for nonexistant character '" + name + "'");
+  }
+  var user = Meteor.user().emails[0].address;
+  if (user !== character.owner) {
+    throw new Meteor.Error(403, "You don't have permission to edit that character");
+  }
+
+  if (!_.contains(Deities.all(), deity)) {
+    throw new Meteor.Error(403, "That deity doesn't exist");
+  }
+  
+  var new_set = {deity: deity};
+  dbWrapper.db.update({_id: character._id}, {$set: new_set});
 }
 
 // Attempt to fire a levelbox click for a character name.
@@ -126,10 +209,7 @@ GenericCharacters.characterLevelbox = function(
     clear, 
     dbWrapper) {
   // Check character.
-  var character = dbWrapper.db.findOne({name: {
-    $regex: RegExp.quote(character_name),
-    $options: 'i'
-  }});
+  var character = dbWrapper.characterExists(character_name);
   if (!character) {
     throw new Meteor.Error(403, "Character does not exist");
   }

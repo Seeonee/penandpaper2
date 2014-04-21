@@ -46,10 +46,40 @@
 </template>
 
 <template name="character_summary">
-  {{> character_points}}
-  {{> character_attributes}}
-  {{> character_devotions}}
-  {{> character_skills}}
+  <div class="mini_column">
+    {{> character_skills}}
+  </div>
+  <div class="mini_column">
+    {{> character_attributes}}
+    {{> character_devotions}}
+  </div>
+  <div class="mini_column">
+    {{> character_controls}}
+    {{> character_points}}
+  </div>
+</template>
+
+<template name="character_controls">
+  <div class="character_section controls">
+    <h3>CONFIGURATION</h3>
+    <div class="row level">
+      <div class="tag">Change your level</div>
+      <div class="value">
+        <div class="change_level level_down {{can_level_down}}">-</div>
+        <div class="change_level level_up {{can_level_up}}">+</div>
+      </div>
+    </div>
+    <div class="row deity">
+      <div class="tag">Choose your deity</div>
+      <div class="value">
+        <select type="text" name="set_deity">
+          {{#each selectable_deities}}
+            <option value="{{name}}" {{selected}}>{{name_pretty}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+  </div>
 </template>
 
 <template name="character_points">
@@ -76,29 +106,29 @@
   </div>
 </template>
 
+<template name="character_skills">
+  <div class="character_section skills">
+    <h3>SKILLS</h3>
+    {{#each skills}}
+      <div class="row skill">
+        <div class="tag">{{name}}</div>
+        <div class="value">{{value}}</div>
+      </div>
+    {{/each}}
+  </div>
+</template>
+
 <template name="character_devotions">
   {{#if is_devoted}}
     <div class="character_section devotions">
       <h3>DEVOTION</h3>
       {{#each devotions}}
         <div class="row devotion">
-          <div class="tag">{{name}}</div>
+          <div class="tag">{{name}} God</div>
           <div class="value">{{value}}</div>
         </div>
       {{/each}}
     </div>
   {{/if}}
-</template>
-
-<template name="character_skills">
-  <div class="character_section skills">
-    <h3>SKILLS</h3>
-    {{#each skills}}
-      <div class="row skill">
-        <div class="tag">{{name}}:</div>
-        <div class="value">{{value}}</div>
-      </div>
-    {{/each}}
-  </div>
 </template>
 

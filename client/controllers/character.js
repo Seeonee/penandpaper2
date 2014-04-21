@@ -31,6 +31,57 @@ Template.character_nav.key_points_remaining = function() {
   return CharacterSupport.key_points_remaining(this);
 }
 
+// Can this character level up?
+Template.character_controls.can_level_up = function() {
+  return (this.level < 15) ? 'available' : '';
+}
+
+// Can this character level up?
+Template.character_controls.can_level_down = function() {
+  return (this.level > 1 && this.points_spent.skill_points != this.points.skill_points) ? 'available' : '';
+}
+
+// Get the available deities.
+Template.character_controls.selectable_deities = function() {
+  return CharacterSupport.selectable_deities(this);
+}
+
+// Click events for the various controls.
+Template.character_controls.events({
+  'click .level_down.available': function() {
+    var options = {
+      character_name: Session.get('selected_character')
+    };
+    Meteor.call('characterLevelDown', options, function(err, result) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  },
+  'click .level_up.available': function() {
+    var options = {
+      character_name: Session.get('selected_character')
+    };
+    Meteor.call('characterLevelUp', options, function(err, result) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  },
+  'change [name*="set_deity"]': function(evt) {
+    var deity = $(evt.target).val();
+    var options = {
+      character_name: Session.get('selected_character'),
+      deity: deity
+    };
+    Meteor.call('characterSetDeity', options, function(err, result) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  },
+});
+
 // Get the character's skill and key points.
 Template.character_points.points = function() {
   return CharacterSupport.points(this);

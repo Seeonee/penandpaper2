@@ -78,6 +78,56 @@ Meteor.methods({
       options.slot_id,
       options.clear,
       GenericCharacters.Characters);
+  },
+  
+  // ------------------------------------------------------------------ //
+  // Options is a map of: character name.
+  characterLevelDown: function(options) {
+    // Check permissions.
+    if (!this.userId) {
+      throw new Meteor.Error(403, "You must be logged in");
+    }
+    check(options, {
+      character_name: NonEmptyString
+    });
+    
+    GenericCharacters.characterLevelDown(
+      options.character_name.trim(), 
+      GenericCharacters.Characters);
+  }, 
+  
+  // ------------------------------------------------------------------ //
+  // Options is a map of: character name.
+  characterLevelUp: function(options) {
+    // Check permissions.
+    if (!this.userId) {
+      throw new Meteor.Error(403, "You must be logged in");
+    }
+    check(options, {
+      character_name: NonEmptyString
+    });
+    
+    GenericCharacters.characterLevelUp(
+      options.character_name.trim(), 
+      GenericCharacters.Characters);
+  }, 
+  
+  // ------------------------------------------------------------------ //
+  // Options is a map of: character name.
+  characterSetDeity: function(options) {
+    // Check permissions.
+    if (!this.userId) {
+      throw new Meteor.Error(403, "You must be logged in");
+    }
+    check(options, {
+      character_name: NonEmptyString,
+      deity: NonEmptyString
+    });
+    
+    GenericCharacters.characterSetDeity(
+      options.character_name.trim(), 
+      options.deity.trim(),
+      GenericCharacters.Characters);
   }
 });
 
@@ -100,12 +150,12 @@ var NonEmptyString = Match.Where(function(x) {
 // Populate some test data.
 Meteor.startup(function() {
   if (!Characters.findOne()) {
-    createCharacter('Hackett', 'aj@email.com', GenericCharacters.Characters);
-    createCharacter('Grimm', 'jess@email.com', GenericCharacters.Characters);
-    createCharacter('Heian', 'dale@email.com', GenericCharacters.Characters);
-    createCharacter('Vetis', 'keith@email.com', GenericCharacters.Characters);
-    createCharacter('Jazz', 'joe@email.com', GenericCharacters.Characters);
-    createCharacter('Celery', 'kevin@email.com', GenericCharacters.Characters);
+    GenericCharacters.createCharacter('Hackett', 'aj@email.com', GenericCharacters.Characters);
+    GenericCharacters.createCharacter('Grimm', 'jess@email.com', GenericCharacters.Characters);
+    GenericCharacters.createCharacter('Heian', 'dale@email.com', GenericCharacters.Characters);
+    GenericCharacters.createCharacter('Vetis', 'keith@email.com', GenericCharacters.Characters);
+    GenericCharacters.createCharacter('Jazz', 'joe@email.com', GenericCharacters.Characters);
+    GenericCharacters.createCharacter('Celery', 'kevin@email.com', GenericCharacters.Characters);
   }
 });
 

@@ -29,17 +29,15 @@ CharacterSupport.details = function(character) {
   var level = 'Level ' + character.level;
 
   // Heritage.
-  var heritage = null;
-  // TODO: Try to find out the heritage here.
+  var heritage = character.slots.heritage.equipped;
   if (heritage) {
-    details += ' ' + heritage;
+    details += ' ' + CaseUtils.capitalize(heritage);
   }
   
   // Calling.
-  var calling = null;
-  // TODO: Try to find out the calling here.
+  var calling = character.slots.heritage.equipped;
   if (calling) {
-    details += ' ' + calling;
+    details += ' ' + CaseUtils.capitalize(calling);
   }
   if (details.length == 0) {
     details = ' Mystery';
@@ -57,6 +55,23 @@ CharacterSupport.skill_points_remaining = function(character) {
 // Get the remaining key points.
 CharacterSupport.key_points_remaining = function(character) {
   return character.points.key_points - character.points_spent.key_points;
+}
+
+// Get the available deities, including which one's selected.
+CharacterSupport.selectable_deities = function(character) {
+  var result = _.map(Deities.all(), function(v) {
+    return {
+      name: v,
+      name_pretty: CaseUtils.capitalize(v),
+      selected: (character.deity === v) ? 'selected' : ''
+    };
+  })
+  result.unshift({
+    name: '',
+    name_pretty: '',
+    selected: ''
+  });
+  return result;
 }
 
 // Get the character's skill and key points.
@@ -99,14 +114,21 @@ CharacterSupport.skills = function(character) {
 // Is this character devoted to any gods?
 CharacterSupport.is_devoted = function(character) {
   var total_devotion = _.reduce(character.devotions, function(total, value) {
-    return total + value;
+    return total + Math.abs(value);
   }, 0);
   return total_devotion != 0;
 }
 
 // Get the character's nonzero devotions.
 CharacterSupport.devotions = function(character) {
-  var all_devotions = _.map(character.devotions, function(value, key) {
+  var devotions = character.devotions;
+  // "Any" goes to the deity of choice.
+  if (character.deity != null && character.deity in devotions) {
+    devotions[character.deity] += devotions.any;
+    devotions.any = 0;
+  }
+  
+  var all_devotions = _.map(devotions, function(value, key) {
     key = PenAndPaperUtils.deunderscore(key);
     return {name: key, value: value};
   })

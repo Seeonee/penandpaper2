@@ -76,18 +76,16 @@
 }
 
 /* Attribute panel. */
-.character_section {
-  float: left;
-  height: auto;
-  width: 284px;
-  margin: 8px;
-}
-
 /* This covers the section headers for the various attribute panels. */
 .character_section h3 {
   text-align: center;
   font-family: Scada;
   border-bottom: 2px solid #c8012e;
+  cursor: default;
+}
+.character_section:hover h3 {
+  color: #fff;
+  background-color: #c8012e;
 }
 
 .character_section .tag {
@@ -110,5 +108,39 @@
 
 .character_section .row:hover {
   background-color: #e1e1e1;
+}
+
+/* Some fine-grained styling for the controls. */
+.character_section.controls .tag {
+  width: 180px;
+}
+.character_section.controls .value {
+  width: 90px;
+}
+
+.character_section.controls .change_level {
+  display: inline-block;
+  margin-top: 3px;
+  height: 18px;
+  width: 18px;
+  font-family: Verdana;
+  font-weight: bold;
+  text-align: center;
+}
+/* And the colors... */
+.character_section.controls .change_level {
+  background-color: #c1c1c1;
+  cursor: default;
+}
+.character_section.controls .change_level.available {
+  color: #fff;
+  background-color: #c8012e;
+  cursor: pointer;
+}
+.character_section.controls .change_level.available:hover {
+  background-color: #107195;
+}
+.character_section.controls .change_level.available:active {
+  background-color: #075c7b;
 }
 

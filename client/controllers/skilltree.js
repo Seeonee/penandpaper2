@@ -178,7 +178,7 @@ Template.skilltree_tile.events({
       character_name: Session.get('selected_character'),
       slot_name: template.data.name.replace(' ', '_'),
       slot_level: $(evt.target).data().level + 1
-    }
+    };
     if (template.data.id) {
       options.slot_id = template.data.id;
     }
