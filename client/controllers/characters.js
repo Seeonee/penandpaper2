@@ -15,7 +15,7 @@ Template.characters.date_created = function() {
 
 // Date a character was last modified.
 Template.characters.date_modified = function() {
-  return PenAndPaperUtils.formatDate(this.modified);
+  return PenAndPaperUtils.formatDate(this.last_modified_on);
 }
 
 // Figure out if the user has any characters.

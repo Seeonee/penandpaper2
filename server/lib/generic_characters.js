@@ -130,7 +130,8 @@ GenericCharacters.createCharacter = function(name, owner, dbWrapper) {
     deity: null,
     slots: slots,
     
-    date_created: Date.now(),
+    created: Date.now(),
+    last_modified_on: Date.now(),
     owner: owner
   }
   
@@ -173,6 +174,7 @@ GenericCharacters.characterLevelDown = function(name, dbWrapper) {
       character.points.skill_points - dbWrapper.schema[character.level].skill_points;
   new_set['points.key_points'] = 
       character.points.key_points - dbWrapper.schema[character.level].key_points;
+  new_set['last_modified_on'] = Date.now();
   dbWrapper.db.update({_id: character._id}, {$set: new_set});
 }
 
@@ -197,6 +199,7 @@ GenericCharacters.characterLevelUp = function(name, dbWrapper) {
       character.points.skill_points + dbWrapper.schema[character.level + 1].skill_points;
   new_set['points.key_points'] = 
       character.points.key_points + dbWrapper.schema[character.level + 1].key_points;
+  new_set['last_modified_on'] = Date.now();
   dbWrapper.db.update({_id: character._id}, {$set: new_set});
 }
 
@@ -217,6 +220,7 @@ GenericCharacters.characterSetDeity = function(name, deity, dbWrapper) {
   }
   
   var new_set = {deity: deity};
+  new_set['last_modified_on'] = Date.now();
   dbWrapper.db.update({_id: character._id}, {$set: new_set});
 }
 
@@ -387,6 +391,7 @@ var character_do_fill = function(character, slot_name, slot_id, slot_level, cost
   var new_set = {};
   new_set[create_key(slot_name, slot_id, slot_level) + '.filled'] = 1;
   new_set['points_spent.skill_points'] = character.points_spent.skill_points + cost;
+  new_set['last_modified_on'] = Date.now();
   dbWrapper.db.update({ _id: character._id}, { $set: new_set});
 }
 
@@ -396,6 +401,7 @@ var character_do_clear = function(character, slot_name, slot_id, slot_level, cos
   var new_set = {};
   new_set[create_key(slot_name, slot_id, slot_level) + '.filled'] = 0;
   new_set['points_spent.skill_points'] = character.points_spent.skill_points - cost;
+  new_set['last_modified_on'] = Date.now();
   dbWrapper.db.update({ _id: character._id}, { $set: new_set});
 }
 
@@ -405,6 +411,7 @@ var character_do_unlock = function(character, slot_name, slot_id, slot_level, db
   var new_set = {};
   new_set[create_key(slot_name, slot_id, slot_level) + '.unlocked'] = 1;
   new_set['points_spent.key_points'] = character.points_spent.key_points + 1;
+  new_set['last_modified_on'] = Date.now();
   dbWrapper.db.update({ _id: character._id}, { $set: new_set});
 }
 
@@ -414,6 +421,7 @@ var character_do_relock = function(character, slot_name, slot_id, slot_level, db
   var new_set = {};
   new_set[create_key(slot_name, slot_id, slot_level) + '.unlocked'] = 0;
   new_set['points_spent.key_points'] = character.points_spent.key_points - 1;
+  new_set['last_modified_on'] = Date.now();
   dbWrapper.db.update({ _id: character._id}, { $set: new_set});
 }
 

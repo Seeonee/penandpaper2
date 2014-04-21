@@ -90,6 +90,7 @@ Meteor.methods({
       text: options.text,
       bonuses: [],
       created_by: Meteor.user().emails[0].address,
+      created: Date.now(),
       last_modified_on: Date.now()
     });
     return id;
