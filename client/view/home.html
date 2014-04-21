@@ -3,7 +3,10 @@
     {{#if get_user}}
       {{> user_home}}
     {{else}}
-      <div class="error not_logged_in">Log in to create your own characters.</div>
+      <div class="error not_logged_in">
+        <h1>Welcome to Pen & Paper</h1>
+        <p>Check out existing characters, or sign in to create your own.</p>
+      </div>
     {{/if}}
     {{> new_character_dialog}}
   </div>
@@ -26,7 +29,7 @@
 
 <template name="character_tile">
   <a class="user_character" href="{{pathFor 'character' name=this.name}}">
-    <div class="name">{{name}}</div>
+    <div class="name">{{name_pretty}}</div>
     <div class="details">{{details}}</div>
     <a class="button delete" href="#"></a>
   </a>

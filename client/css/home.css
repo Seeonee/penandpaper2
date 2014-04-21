@@ -3,17 +3,6 @@
   font-family: Verdana;
 }
 
-.user_home h1 {
-  color: #c8012e;
-  padding-top: 15px;
-}
-
-.user_home .user_characters h2 {
-  text-align: center;
-  color: #7b0d26;
-  font-size: 16px;
-}
-
 /* Character navlet; links between summary and edit sections,
    but also shows a quick-view of important details while editing. */
 .user_home .user_characters .user_character {
@@ -102,3 +91,7 @@
   background-image: url('../images/delete_depress.png');
 }
 
+/* Styling for the "login to play!" message. */
+.user_home .not_logged_in {
+  text-align: center;
+}

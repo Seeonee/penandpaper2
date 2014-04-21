@@ -18,7 +18,7 @@ CharacterSupport.editing = function() {
 
 // Are we *allowed* to be editing this character?
 CharacterSupport.owns = function(character) {
-  return (Meteor.userId && Meteor.user().emails[0].address == character.owner);
+  return (Meteor.userId() != null && Meteor.user().emails[0].address == character.owner);
 }
 
 // Get the character's details as a quick summary.
@@ -166,7 +166,8 @@ CharacterSupport.get_owners = function(db) {
 CharacterSupport.characters_from_db_owned_by = function(db, owner) {
   return db.find({owner: owner}, {sort: {last_modified_on: -1, name: -1}}).map(function(v) {
     return {
-      name: v.name.toUpperCase(),
+      name: v.name,
+      name_pretty: v.name.toUpperCase(),
       details: CharacterSupport.details(v)
     };
   });

@@ -1,12 +1,6 @@
 /* Laying out the sections of the character summary. */
-.character h1, .character h2, .character_section {
+.character_section {
   font-family: Verdana;
-}
-
-/* Character name heading. */
-.character h1 {
-  color: #c8012e;
-  padding-top: 15px;
 }
 
 .character .details {

@@ -23,5 +23,15 @@ body {
 }
 
 h1 {
+  font-family: Verdana;
   text-align: center;
+  color: #c8012e;
+  padding-top: 35px;
+}
+
+h2 {
+  font-family: Verdana;
+  text-align: center;
+  color: #7b0d26;
+  font-size: 16px;
 }
