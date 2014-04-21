@@ -215,7 +215,8 @@ GenericCharacters.characterSetDeity = function(name, deity, dbWrapper) {
     throw new Meteor.Error(403, "You don't have permission to edit that character");
   }
 
-  if (!_.contains(Deities.all(), deity)) {
+  deity = deity || null;
+  if (deity && !_.contains(Deities.all(), deity)) {
     throw new Meteor.Error(403, "That deity doesn't exist");
   }
   

@@ -121,7 +121,7 @@ Meteor.methods({
     }
     check(options, {
       character_name: NonEmptyString,
-      deity: NonEmptyString
+      deity: Match.Any
     });
     
     GenericCharacters.characterSetDeity(

@@ -17,7 +17,20 @@ var codexReady = function() {
 
 // Set up the routes!
 Router.map(function() {
-  this.route('home', {path: '/'});
+  this.route('home', {
+    path: '/',
+    onBeforeAction: function() {
+      this.subscribe('characters').wait();
+      this.subscribe('codex').wait();
+    },
+    action: function() {
+      if (this.ready()) {
+        this.render();
+      } else {
+        this.render('loading');
+      }
+    }
+  });
   
   // Page showing all characters.
   this.route('characters', {
@@ -67,7 +80,7 @@ Router.map(function() {
   
   // Page showing a single character by name.
   this.route('character_edit_slot', {
-    path: 'characters/:name/e/:slot_name/:slot_id?/:filters(*)?',
+    path: 'characters/:name/e/:slot_name/:slot_id?/f/:filters(*)?',
     // waitOn: charactersReady, // TODO: Needs characters too!
     onBeforeAction: function() {
       this.subscribe('characters').wait();

@@ -1,11 +1,11 @@
-Add a mechanism to add bonuses. These probably don't need to be displayed, since they're encapsulated in the text anyways.
 Add a distinction between player and monster codices.
 Refactor all the "Character" stuff into helpers that accept a database of characters (PCs or NPCs) and an entity from that database.
-Use LESS to define color constants (and maybe more).
 Make it possible to clear levelboxes as long as the equipped skill is a lower level.
-Add a way to create new characters from the home view.
-Add a way to delete characters from the home view.
 Add a way to admin-delete characters from the characters page.
-Clean up all the client/server/lib common code lying around. Take server-side code that would also be useful to the client and move it into lib.
-Add tooltips to skilltree tiles.
-Consider getting rid of the grey highlight when hovering on equipped skilltree tiles.
+Style the "Characters" page.
+Add sorting on the home page.
+Add a "Monsters" page.
+Give each Characters dbWrapper a Codex field that it can use for skill lookups.
+Implement the glossary.
+Import all skills.
+Give all skills actual bonuses, especially for skill checks.

@@ -257,8 +257,12 @@ var IntegerAsString = Match.Where(function(x) {
   return parseInt(x);
 });
 
+
+
+
 // Populate some test data.
 Meteor.startup(function() {
+/*
   if (!Codex.findOne()) {
     Codex.insert({
       _id: Random.id(),
@@ -301,6 +305,7 @@ Meteor.startup(function() {
       created_by: 'kevin@mail.com',
       last_modified_on: Date.now()});
   }
+*/
 });
 
 
