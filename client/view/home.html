@@ -5,6 +5,7 @@
     {{else}}
       <div class="error not_logged_in">Log in to create your own characters.</div>
     {{/if}}
+    {{> new_character_dialog}}
   </div>
 </template>
 
@@ -14,14 +15,27 @@
     <div class="user_characters">
       <h2>Your characters:</h2>
       {{#each characters}}
-        <a class="user_character" href="{{pathFor 'character' name=this.name}}">
-          <div class="name">{{name}}</div>
-          <div class="details">{{details}}</div>
-        </a>
+        {{> character_tile}}
       {{/each}}
+      {{> new_character_tile}}
     </div>
   {{else}}
     <div class="error no_characters">You haven't created any characters yet.</div>
   {{/if}}
+</template>
+
+<template name="character_tile">
+  <a class="user_character" href="{{pathFor 'character' name=this.name}}">
+    <div class="name">{{name}}</div>
+    <div class="details">{{details}}</div>
+    <a class="button delete" href="#"></a>
+  </a>
+</template>
+
+<template name="new_character_tile">
+  <a class="user_character new" href="#">
+    <div class="name">NEW CHARACTER</div>
+    <div class="details">Click to get started</div>
+  </a>
 </template>
 

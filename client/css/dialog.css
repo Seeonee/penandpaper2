@@ -36,6 +36,7 @@
   font-weight: bold;
   font-size: 18px;
   text-align: right;
+  vertical-align: text-top;
 }
 .dialog_modal input.text {
   vertical-align: text-top;
@@ -57,3 +58,11 @@
   margin-right: 20px;
 }
 
+/* Aaaand error message styling. */
+.dialog_modal .error {
+  text-align: right;
+  margin: 5px;
+  font-weight: normal;
+  right: 20px;
+  position: relative;
+}

@@ -22,3 +22,21 @@ Template.user_home.characters = function() {
   return CharacterSupport.characters_from_db_owned_by(Characters, get_user());
 }
 
+// Button for deleting a character.
+Template.character_tile.events({
+  'click .delete': function() {
+    if (confirm('Are you sure you want to delete "' + this.name + '"?')) {
+      Meteor.call('deleteCharacter', {name: this.name});
+    }
+  }
+});
+
+// Open a dialog to create a new character.
+Template.new_character_tile.events({
+  'click .new': function() {
+    var character = {
+      name: ''
+    };
+    Session.set('new_character', character);
+  }
+});

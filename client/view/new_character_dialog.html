@@ -1,0 +1,26 @@
+<template name="new_character_dialog">
+  {{#if isVisible}}
+    <div class="dialog_mask">
+    <div class="dialog_modal">
+      <div>
+        <h3>NEW CHARACTER</h3>
+        <div class="dialog-body">
+          {{#with character_being_created}}
+            {{#if error}}
+              <div class="error">{{error}}</div>
+            {{/if}}
+            <div class="name">
+              <div class="tag">NAME:</div>
+              <input type="text" class="text" name="new_character_name" value="{{name}}" />
+            </div>
+          {{/with}}
+          <div class="buttons">
+            <input type="button" class="dialog_submit_button" value="OK" />
+            <input type="button" class="dialog_cancel_button" value="Cancel" />
+          </div>
+        </div>
+      </div>
+    </div></div>
+  {{/if}}
+</template>
+

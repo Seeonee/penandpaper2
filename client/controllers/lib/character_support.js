@@ -166,7 +166,7 @@ CharacterSupport.get_owners = function(db) {
 CharacterSupport.characters_from_db_owned_by = function(db, owner) {
   return db.find({owner: owner}, {sort: {modified: -1, name: -1}}).map(function(v) {
     return {
-      name: v.name,
+      name: v.name.toUpperCase(),
       details: CharacterSupport.details(v)
     };
   });

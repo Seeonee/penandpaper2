@@ -53,6 +53,23 @@
   background-color: #107195;
 }
 
+.user_home .user_characters .user_character:active {
+  border-color: #075c7b;
+  background-color: #075c7b;
+}
+
+/* "New character" tile styling. */
+.user_home .user_characters .user_character.new {
+  border: none;
+  width: 208px;
+  height: 208px;
+}
+.user_home .user_characters .user_character.new .name,
+.user_home .user_characters .user_character.new .details {
+  color: #c1c1c1;
+}
+
+/* Always light the text up on hover. */
 .user_home .user_characters .user_character:hover .name,
 .user_home .user_characters .user_character:active .name,
 .user_home .user_characters .user_character:hover .details,
@@ -61,8 +78,27 @@
   color: #fff;
 }
 
-.user_home .user_characters .user_character:active {
-  border-color: #075c7b;
-  background-color: #075c7b;
+/* Delete button styling. */
+.user_home .user_characters .user_character .button {
+  display: none;
+}
+.user_home .user_characters .user_character:hover .button {
+  display: block;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  background-image: url('../images/delete.png');
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.user_home .user_characters .user_character .button:hover {
+  background-color: #c1c1c1;
+  background-image: url('../images/delete_active.png');
+}
+.user_home .user_characters .user_character .button:active {
+  background-image: url('../images/delete_depress.png');
 }
 

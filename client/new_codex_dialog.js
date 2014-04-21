@@ -14,7 +14,9 @@ Template.new_codex_dialog.codice_being_created = function() {
 var newCodiceCallback = function(err, result) {
   if (err) {
     console.log('error: ' + err);
-    Session.set('new_codice', _.extend(Session.get('new_codice'), {error: err.toString()}));
+    Session.set('new_codice', _.extend(Session.get('new_codice'), {
+      error: ErrorUtils.extract(err.toString())
+    }));
   } else {
     console.log('success; new entry id: ' + result);
     Session.set('new_codice', null);

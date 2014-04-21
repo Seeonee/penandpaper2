@@ -96,6 +96,10 @@ GenericCharacters.createCharacter = function(name, owner, dbWrapper) {
   
   // Check the name.
   name = name.trim();
+  if (name.length == 0) {
+    // We've already tested this, so it's just for feel-goodsies.
+    throw new Meteor.Error(413, "Name too short");
+  }
   if (name.length > 100) {
     throw new Meteor.Error(413, "Name too long");
   }
