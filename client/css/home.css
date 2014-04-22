@@ -17,7 +17,7 @@
 
 .user_home .user_characters .user_character .name {
   position: absolute;
-  top: 35%;
+  top: 30%;
   left: 0px;
   width: 100%;
   text-align: center;
@@ -28,7 +28,7 @@
 
 .user_home .user_characters .user_character .details {
   position: absolute;
-  top: 51%;
+  top: 55%;
   left: 5%;
   width: 90%;
   text-align: center;

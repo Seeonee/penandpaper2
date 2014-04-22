@@ -116,14 +116,6 @@ var isNewlineAllowedInElement = function(element) {
 // Open a dialog to create a new codex entry,
 // using an existing entry as a template.
 Template.codex_entry.events({
-  'keypress [contenteditable="true"]': function(evt) {
-    if (evt.which == 13) {
-      var element = $(event.target);
-      if (!isNewlineAllowedInElement(element)) {
-        evt.preventDefault();
-      }
-    }
-  },
   // Create a new entry based on this one.
   'click .button.copy': function() {
     var codice = {

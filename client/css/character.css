@@ -40,17 +40,7 @@
 
 /* Attribute panel. */
 /* This covers the section headers for the various attribute panels. */
-.character_section h3 {
-  text-align: center;
-  font-family: Scada;
-  border-bottom: 2px solid #c8012e;
-  cursor: default;
-}
-.character_section:hover h3 {
-  color: #fff;
-  background-color: #c8012e;
-}
-
+/* Some fine-grained styling for the controls. */
 .character_section .tag {
   display: inline-block;
   width: 250px;
@@ -60,7 +50,6 @@
   padding: 0 5px 5px 0;
   cursor: default;
 }
-
 .character_section .value {
   vertical-align: text-top;
   display: inline-block;
@@ -68,12 +57,6 @@
   font-weight: normal;
   text-align: right;
 }
-
-.character_section .row:hover {
-  background-color: #e1e1e1;
-}
-
-/* Some fine-grained styling for the controls. */
 .character_section.controls .tag {
   width: 180px;
 }

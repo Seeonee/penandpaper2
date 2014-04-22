@@ -47,7 +47,7 @@ Meteor.methods({
     });
 
     // Check name.
-    options.name = options.name.trim().toUpperCase();
+    options.name = options.name.trim().replace(/\n/g, '').toUpperCase();
     if (options.name.length > 100) {
       throw new Meteor.Error(413, "Name too long");
     }
@@ -59,14 +59,14 @@ Meteor.methods({
     options.level = parseInt(options.level);
     
     // Check slots.
-    options.slots = PenAndPaperUtils.multi_reunderscore(options.slots.split(','));
+    options.slots = PenAndPaperUtils.multi_reunderscore(options.slots.replace(/\n/g, '').split(','));
     if (options.slots.length > 200) {
       throw new Meteor.Error(413, "Slots too long");
     }
     options.slots = options.slots.split(',');
     
     // Check types.
-    options.types = PenAndPaperUtils.multi_reunderscore(options.types.split(','));
+    options.types = PenAndPaperUtils.multi_reunderscore(options.types.replace(/\n/g, '').split(','));
     if (options.types.length > 200) {
       throw new Meteor.Error(413, "Types too long");
     }
@@ -81,7 +81,7 @@ Meteor.methods({
     }
     
     // Check bonuses.
-    options.bonuses = _.map(options.bonuses.trim().split(','), function(value) {
+    options.bonuses = _.map(options.bonuses.trim().replace(/\n/g, '').split(','), function(value) {
       return value.trim();
     });
     if (!CharacterDefaults.bonusesExist(options.bonuses)) {

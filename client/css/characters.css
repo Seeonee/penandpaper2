@@ -1,0 +1,27 @@
+/* Laying out the sections of the characters page. */
+.character_collection .name {
+  display: inline-block;
+  font-family: "Scada", sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 0 5px 5px 0;
+}
+
+.character_collection .details {
+  vertical-align: text-top;
+  display: inline-block;
+  font-weight: normal;
+  cursor: default;
+}
+
+.owned_character a {
+  text-decoration: none;
+  color: #c8012e;
+}
+.owned_character a:hover {
+  color: #107195;
+}
+.owned_character a:active {
+  color: #075c7b;
+}
+

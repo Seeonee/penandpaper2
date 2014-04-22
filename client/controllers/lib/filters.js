@@ -170,6 +170,11 @@ FilterUtils.default_data_to_url_converter = function(text) {
   return text.trim().toLowerCase();
 }
 
+// Default function for converting data into a URL.
+FilterUtils.space_to_underscore_data_to_url_converter = function(text) {
+  return text.trim().toLowerCase().replace(/\s+/g, '_');
+}
+
 // More complicated function for converting data into a URL;
 // this one splits up by commas and returns an ampersanded list.
 FilterUtils.as_list_data_to_url_converter = function(text) {

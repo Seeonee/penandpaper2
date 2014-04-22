@@ -35,7 +35,10 @@ Router.map(function() {
   // Page showing all characters.
   this.route('characters', {
     path: 'characters',
-    waitOn: charactersReady,
+    onBeforeAction: function() {
+      this.subscribe('characters').wait();
+      this.subscribe('codex').wait();
+    },
     action: function() {
       if (this.ready()) {
         this.render();

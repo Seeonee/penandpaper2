@@ -30,7 +30,8 @@ var initialize_filters = function() {
   CodexFilters.add_multiple_choice_filter(
     'slots', 
     choices, 
-    FilterUtils.all_in_list_match
+    FilterUtils.all_in_list_match,
+    FilterUtils.space_to_underscore_data_to_url_converter
   );
 }
 

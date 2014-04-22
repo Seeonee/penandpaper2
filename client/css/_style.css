@@ -15,12 +15,27 @@ body {
   margin: auto;
 }
 
+/* Mini column with reusable styling. */
 .mini_column {
   float: left;
   width: 284px;
   margin: 8px;
   height: auto;
 }
+.mini_column_section  h3 {
+  text-align: center;
+  font-family: Scada;
+  border-bottom: 2px solid #c8012e;
+  cursor: default;
+}
+.mini_column_section:hover h3 {
+  color: #fff;
+  background-color: #c8012e;
+}
+.mini_column_section .row:hover {
+  background-color: #e1e1e1;
+}
+
 
 h1 {
   font-family: Verdana;

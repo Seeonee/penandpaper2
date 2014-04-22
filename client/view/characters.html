@@ -1,6 +1,6 @@
 <template name="characters">
-  <h1>Characters</h1>
   <div class="column character_list_by_owners">
+    <h1>Characters</h1>
     {{#if characters_exist}}
       {{#each get_owners}}
         {{> character_owner}}
@@ -12,7 +12,7 @@
 </template>
 
 <template name="character_owner">
-  <div class="character_owner">
+  <div class="mini_column mini_column_section character_collection">
     <h3 class="owner_name">{{name}}</h3>
     {{#each characters}}
       {{> owned_character}}
@@ -21,7 +21,8 @@
 </template>
 
 <template name="owned_character">
-  <div class="owned_character">
-    <a href="{{pathFor 'character' name=this.name}}">{{name}}</a>
+  <div class="row owned_character">
+    <a class="name" href="{{pathFor 'character' name=this.name}}">{{name_pretty}}</a>
+    <div class="details">» {{details}}</div>
   </div>
 </template>

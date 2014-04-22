@@ -16,7 +16,10 @@ def toASCII(s):
 
 def prepare(doc):
     doc2 = {}
-    doc2['bonuses'] = []
+    if doc[u'bonuses']:
+      doc2['bonuses'] = [toASCII(s) for s in doc[u'types']]
+    else:
+      doc2['bonuses'] = []
     doc2['name'] = toASCII(doc[u'name']).upper()
     doc2['level'] = doc[u'level']
     if doc[u'types']:
