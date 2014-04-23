@@ -87,12 +87,20 @@ Template.codex_entry.text_with_breaks = function() {
 
 // Lite test for admin privileges.
 var can_edit = function() {
-  return Session.get('editing_slot') == null && MyAdmins.isUserLoggedInAsAdmin();
+  return Session.get('selected_character') == null && MyAdmins.isUserLoggedInAsAdmin();
 }
 
 // Attach it to various templates.
 Template.codex.can_edit = can_edit;
 Template.codex_entry.can_edit = can_edit;
+
+// Is this a summary view?
+Template.codex_entry.summary_upgrade = function() {
+  if (Session.get('selected_character') != null && Session.get('editing_character') == null) {
+    return (this.slots[0].indexOf('upgrade') >= 0);
+  }
+  return false;
+}
 
 // This is fired whenever our "delete" attempt finishes
 // or fails.

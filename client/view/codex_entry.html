@@ -28,6 +28,9 @@
           <div class="value" contenteditable="{{can_edit}}">{{bonuses_list}}</div>
         </div>
       {{/if}}
+      {{#if summary_upgrade}}
+        <div class="upgrade_for"></div>
+      {{/if}}
     </div>
     {{#if can_edit}}
       <div class="button save"></div>

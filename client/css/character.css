@@ -91,3 +91,17 @@
   background-color: #075c7b;
 }
 
+/* And finally, our mini-codex view. */
+.character_equipped_skills {
+  clear: both;
+}
+.character_equipped_skills .upgrade_for {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 75px;
+  height: 20px;
+  background-image: url("../images/upgrade_for.png");
+  background-repeat: no-repeat;
+  background-position: top right;
+}

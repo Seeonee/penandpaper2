@@ -57,6 +57,15 @@
     {{> character_controls}}
     {{> character_points}}
   </div>
+  {{> character_equipped_skills}}
+</template>
+
+<template name="character_equipped_skills">
+  <div class="character_equipped_skills">
+  {{#each equipped_skills}}
+    {{> codex_entry}}
+  {{/each}}
+  </div>
 </template>
 
 <template name="character_controls">
@@ -120,7 +129,7 @@
 
 <template name="character_devotions">
   {{#if is_devoted}}
-    <div class="character_section devotions">
+    <div class="mini_column_section character_section devotions">
       <h3>DEVOTION</h3>
       {{#each devotions}}
         <div class="row devotion">

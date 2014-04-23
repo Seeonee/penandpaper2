@@ -120,3 +120,8 @@ Template.character_devotions.devotions = function() {
   return CharacterSupport.devotions(this);
 }
 
+// Get the character's skills.
+Template.character_equipped_skills.equipped_skills = function() {
+  return CharacterSupport.equipped_skills(this);
+}
+
