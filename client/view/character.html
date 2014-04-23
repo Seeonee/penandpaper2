@@ -54,7 +54,9 @@
     {{> character_devotions}}
   </div>
   <div class="mini_column">
-    {{> character_controls}}
+    {{#if owns}}
+      {{> character_controls}}
+    {{/if}}
     {{> character_points}}
   </div>
   {{> character_equipped_skills}}

@@ -15,6 +15,9 @@ Template.character_nav.editing = CharacterSupport.editing;
 Template.character.owns = function() {
   return CharacterSupport.owns(this);
 }
+Template.character_summary.owns = function() {
+  return CharacterSupport.owns(this);
+}
 
 // Get the character's details as a quick summary.
 Template.character.details = function() {
