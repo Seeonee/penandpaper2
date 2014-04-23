@@ -14,17 +14,13 @@
 
 <template name="user_home">
   <h1>Welcome, {{get_user}}</h1>
-  {{#if has_characters}}
-    <div class="user_characters">
-      <h2>Your characters:</h2>
-      {{#each characters}}
-        {{> character_tile}}
-      {{/each}}
-      {{> new_character_tile}}
-    </div>
-  {{else}}
-    <div class="error no_characters">You haven't created any characters yet.</div>
-  {{/if}}
+  <div class="user_characters">
+    <h2>Your characters:</h2>
+    {{#each characters}}
+      {{> character_tile}}
+    {{/each}}
+    {{> new_character_tile}}
+  </div>
 </template>
 
 <template name="character_tile">
